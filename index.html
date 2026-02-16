@@ -3,1229 +3,1008 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bader's Life OS | لوحة حياة بدر</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BaderOS">
+<meta name="theme-color" content="#050a15">
+<title>BaderOS — Life Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg-deep: #0a0e1a;
-  --bg-card: #111827;
-  --bg-card-hover: #1a2237;
-  --bg-elevated: #1e293b;
-  --accent-gold: #f59e0b;
-  --accent-gold-dim: #b45309;
-  --accent-emerald: #10b981;
-  --accent-blue: #3b82f6;
-  --accent-purple: #8b5cf6;
-  --accent-rose: #f43f5e;
-  --accent-cyan: #06b6d4;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --border: rgba(255,255,255,0.06);
-  --border-active: rgba(245,158,11,0.4);
-  --glow-gold: 0 0 30px rgba(245,158,11,0.15);
-  --radius: 16px;
-  --radius-sm: 10px;
+/* ===== RESET & FOUNDATION ===== */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{overflow:hidden;height:100%;touch-action:pan-y;font-size:16px}
+body{
+  font-family:'Noto Kufi Arabic','Syne',sans-serif;
+  background:#050a15;color:#e8edf5;
+  height:100%;overflow:hidden;
+  overscroll-behavior:none;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-- { margin:0; padding:0; box-sizing:border-box; }
+/* Disable double-tap zoom globally */
+*{touch-action:manipulation}
 
-body {
-font-family: ‘Cairo’, ‘Outfit’, sans-serif;
-background: var(–bg-deep);
-color: var(–text-primary);
-min-height: 100vh;
-overflow-x: hidden;
-}
-
-/* Ambient Background */
-.ambient-bg {
-position: fixed; inset: 0; z-index: 0; pointer-events: none;
-background:
-radial-gradient(ellipse 800px 600px at 20% 20%, rgba(245,158,11,0.06), transparent),
-radial-gradient(ellipse 600px 500px at 80% 80%, rgba(59,130,246,0.05), transparent),
-radial-gradient(ellipse 500px 400px at 50% 50%, rgba(139,92,246,0.03), transparent);
+:root{
+–bg:#050a15;–bg2:#0c1322;–bg3:#111b2e;–bg4:#182440;
+–gold:#d4a647;–gold2:#f0c95e;–gold3:#a67c2e;
+–emerald:#34d399;–blue:#60a5fa;–purple:#a78bfa;
+–rose:#fb7185;–cyan:#22d3ee;–amber:#fbbf24;
+–txt:#e8edf5;–txt2:#8c9ab5;–txt3:#4a5878;
+–border:rgba(255,255,255,0.05);
+–glass:rgba(12,19,34,0.85);
+–r:20px;–rs:12px;
+–safe-top:env(safe-area-inset-top,20px);
+–safe-bottom:env(safe-area-inset-bottom,20px);
+–nav-h:72px;
 }
 
-/* Stars effect */
-.stars {
-position: fixed; inset: 0; z-index: 0; pointer-events: none;
-}
-.star {
-position: absolute;
-width: 2px; height: 2px;
-background: rgba(255,255,255,0.4);
-border-radius: 50%;
-animation: twinkle var(–dur) ease-in-out infinite alternate;
-}
-@keyframes twinkle { 0%{opacity:0.2;transform:scale(0.8)} 100%{opacity:1;transform:scale(1.2)} }
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(212,166,71,0.2);border-radius:3px}
 
-/* Layout */
-.app-container {
-position: relative; z-index: 1;
-max-width: 1400px; margin: 0 auto; padding: 20px;
-min-height: 100vh;
-}
+/* ===== APP SHELL ===== */
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden}
 
-/* Header */
-.header {
-display: flex; align-items: center; justify-content: space-between;
-padding: 24px 0; margin-bottom: 24px;
-border-bottom: 1px solid var(–border);
-}
-.header-right {
-display: flex; align-items: center; gap: 16px;
-}
-.logo-icon {
-width: 48px; height: 48px;
-background: linear-gradient(135deg, var(–accent-gold), var(–accent-gold-dim));
-border-radius: 14px;
-display: flex; align-items: center; justify-content: center;
-font-size: 24px; font-weight: 800;
-font-family: ‘Outfit’;
-box-shadow: var(–glow-gold);
-animation: logoPulse 3s ease-in-out infinite;
-}
-@keyframes logoPulse {
-0%,100%{box-shadow: 0 0 20px rgba(245,158,11,0.15)}
-50%{box-shadow: 0 0 40px rgba(245,158,11,0.3)}
-}
-.header-title h1 {
-font-size: 22px; font-weight: 700;
-background: linear-gradient(135deg, var(–accent-gold), #fbbf24);
--webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.header-subtitle { font-size: 13px; color: var(–text-muted); font-family:‘Outfit’; }
+/* ===== CANVAS BACKGROUND ===== */
+.bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.12;animation:orbFloat 20s ease-in-out infinite}
+.orb-1{width:400px;height:400px;background:var(–gold);top:-10%;right:-10%;animation-delay:0s}
+.orb-2{width:300px;height:300px;background:var(–blue);bottom:10%;left:-5%;animation-delay:-7s}
+.orb-3{width:250px;height:250px;background:var(–purple);top:40%;right:20%;animation-delay:-14s;opacity:0.06}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(30px,-40px) scale(1.1)}50%{transform:translate(-20px,30px) scale(0.95)}75%{transform:translate(40px,20px) scale(1.05)}}
 
-.header-left { display: flex; align-items: center; gap: 12px; }
-.greeting-time {
-text-align: left; direction: ltr;
-font-family: ‘JetBrains Mono’; font-size: 13px; color: var(–text-secondary);
-}
-.lang-toggle {
-background: var(–bg-card); border: 1px solid var(–border);
-color: var(–text-secondary); padding: 8px 14px;
-border-radius: var(–radius-sm); cursor: pointer;
-font-family: ‘Cairo’; font-size: 13px; transition: all 0.3s;
-}
-.lang-toggle:hover { border-color: var(–accent-gold); color: var(–accent-gold); }
-
-/* Motivation Banner */
-.motivation-banner {
-background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(59,130,246,0.06));
-border: 1px solid rgba(245,158,11,0.15);
-border-radius: var(–radius);
-padding: 20px 28px; margin-bottom: 24px;
-display: flex; align-items: center; justify-content: space-between;
-cursor: pointer; transition: all 0.4s;
-position: relative; overflow: hidden;
-}
-.motivation-banner::before {
-content: ‘’; position: absolute; inset: 0;
-background: linear-gradient(90deg, transparent, rgba(245,158,11,0.05), transparent);
-animation: shimmer 3s infinite;
-}
-@keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
-.motivation-banner:hover { border-color: rgba(245,158,11,0.35); transform: translateY(-1px); }
-.motivation-text {
-font-size: 16px; font-weight: 600; position: relative; z-index: 1;
-line-height: 1.7;
-}
-.motivation-icon { font-size: 32px; position: relative; z-index: 1; }
-
-/* Tab Navigation */
-.tab-nav {
-display: flex; gap: 6px; margin-bottom: 24px;
-background: var(–bg-card); border-radius: var(–radius);
-padding: 6px; border: 1px solid var(–border);
-overflow-x: auto; scrollbar-width: none;
-}
-.tab-nav::-webkit-scrollbar { display: none; }
-.tab-btn {
-flex: 1; min-width: max-content;
-padding: 12px 18px; border: none; border-radius: var(–radius-sm);
-background: transparent; color: var(–text-muted);
-font-family: ‘Cairo’; font-size: 14px; font-weight: 600;
-cursor: pointer; transition: all 0.3s;
-display: flex; align-items: center; gap: 8px; justify-content: center;
-white-space: nowrap;
-}
-.tab-btn:hover { color: var(–text-secondary); background: rgba(255,255,255,0.03); }
-.tab-btn.active {
-background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.08));
-color: var(–accent-gold); box-shadow: 0 2px 10px rgba(245,158,11,0.1);
-}
-.tab-icon { font-size: 18px; }
-
-/* Tab Content */
-.tab-content { display: none; animation: fadeUp 0.4s ease; }
-.tab-content.active { display: block; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-
-/* Card Styles */
-.card {
-background: var(–bg-card);
-border: 1px solid var(–border);
-border-radius: var(–radius);
-padding: 24px; margin-bottom: 16px;
-transition: all 0.3s;
-}
-.card:hover { border-color: rgba(255,255,255,0.1); background: var(–bg-card-hover); }
-.card-header {
-display: flex; align-items: center; justify-content: space-between;
-margin-bottom: 16px;
-}
-.card-title {
-font-size: 16px; font-weight: 700;
-display: flex; align-items: center; gap: 10px;
-}
-.card-badge {
-font-size: 11px; padding: 3px 10px;
-border-radius: 20px; font-weight: 600;
-font-family: ‘JetBrains Mono’;
+/* Grid pattern overlay */
+.grid-pattern{
+position:fixed;inset:0;z-index:0;pointer-events:none;
+background-image:
+linear-gradient(rgba(212,166,71,0.02) 1px,transparent 1px),
+linear-gradient(90deg,rgba(212,166,71,0.02) 1px,transparent 1px);
+background-size:60px 60px;
 }
 
-/* Grid Layouts */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-
-/* Stat Cards */
-.stat-card {
-background: var(–bg-card); border: 1px solid var(–border);
-border-radius: var(–radius); padding: 20px;
-text-align: center; transition: all 0.3s;
-position: relative; overflow: hidden;
-}
-.stat-card::after {
-content: ‘’; position: absolute; top: 0; left: 0; right: 0;
-height: 3px; border-radius: 3px 3px 0 0;
-}
-.stat-card.gold::after { background: var(–accent-gold); }
-.stat-card.emerald::after { background: var(–accent-emerald); }
-.stat-card.blue::after { background: var(–accent-blue); }
-.stat-card.purple::after { background: var(–accent-purple); }
-.stat-card.rose::after { background: var(–accent-rose); }
-.stat-card.cyan::after { background: var(–accent-cyan); }
-.stat-icon { font-size: 28px; margin-bottom: 8px; }
-.stat-value {
-font-size: 28px; font-weight: 800;
-font-family: ‘Outfit’; margin-bottom: 4px;
-}
-.stat-label { font-size: 12px; color: var(–text-muted); }
-
-/* Habits */
-.habit-item {
-display: flex; align-items: center; gap: 14px;
-padding: 14px 16px; border-radius: var(–radius-sm);
-border: 1px solid var(–border); margin-bottom: 8px;
-cursor: pointer; transition: all 0.3s;
-}
-.habit-item:hover { border-color: rgba(255,255,255,0.1); }
-.habit-item.completed { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); }
-.habit-check {
-width: 28px; height: 28px; border-radius: 8px;
-border: 2px solid var(–text-muted);
-display: flex; align-items: center; justify-content: center;
-font-size: 14px; transition: all 0.3s; flex-shrink: 0;
-}
-.habit-item.completed .habit-check {
-background: var(–accent-emerald); border-color: var(–accent-emerald); color: white;
-}
-.habit-name { flex: 1; font-size: 14px; font-weight: 500; }
-.habit-streak {
-font-family: ‘JetBrains Mono’; font-size: 12px;
-color: var(–accent-gold); background: rgba(245,158,11,0.1);
-padding: 3px 10px; border-radius: 20px;
+/* Noise texture */
+.noise{
+position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.03;
+background-image:url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23n)’/%3E%3C/svg%3E”);
 }
 
-/* Goals */
-.goal-item {
-padding: 18px; border-radius: var(–radius-sm);
-border: 1px solid var(–border); margin-bottom: 12px;
-transition: all 0.3s;
+/* ===== HEADER ===== */
+.header{
+position:relative;z-index:10;
+padding:calc(var(–safe-top) + 8px) 20px 12px;
+display:flex;align-items:center;justify-content:space-between;
+background:linear-gradient(180deg,rgba(5,10,21,0.95) 0%,transparent 100%);
+flex-shrink:0;
 }
-.goal-item:hover { border-color: rgba(255,255,255,0.1); }
-.goal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.goal-name { font-size: 15px; font-weight: 600; }
-.goal-percent { font-family: ‘JetBrains Mono’; font-size: 13px; color: var(–accent-gold); }
-.goal-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
-.goal-fill {
-height: 100%; border-radius: 3px;
-background: linear-gradient(90deg, var(–accent-gold), var(–accent-emerald));
-transition: width 1s ease;
+.h-right{display:flex;align-items:center;gap:12px}
+.logo{
+width:42px;height:42px;border-radius:12px;
+background:linear-gradient(135deg,var(–gold),var(–gold3));
+display:flex;align-items:center;justify-content:center;
+font-family:‘Syne’;font-weight:800;font-size:20px;color:#050a15;
+box-shadow:0 0 25px rgba(212,166,71,0.25),inset 0 1px 0 rgba(255,255,255,0.2);
+position:relative;
+}
+.logo::after{
+content:’’;position:absolute;inset:-2px;border-radius:14px;
+background:linear-gradient(135deg,var(–gold2),transparent,var(–gold3));
+z-index:-1;opacity:0.5;
+}
+.h-title{font-size:17px;font-weight:700;color:var(–gold2);letter-spacing:-0.3px}
+.h-sub{font-size:11px;color:var(–txt3);font-family:‘Syne’;letter-spacing:1px;text-transform:uppercase}
+.h-left{display:flex;align-items:center;gap:10px}
+.clock{text-align:left;direction:ltr;font-family:‘DM Mono’;font-size:12px;color:var(–txt2);line-height:1.5}
+.lang-btn{
+width:36px;height:36px;border-radius:10px;
+background:var(–bg3);border:1px solid var(–border);
+color:var(–txt2);font-size:11px;font-family:‘Syne’;font-weight:600;
+cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;
+}
+.lang-btn:hover,.lang-btn:active{border-color:var(–gold);color:var(–gold)}
+
+/* ===== MAIN SCROLL AREA ===== */
+.main{
+flex:1;overflow-y:auto;overflow-x:hidden;
+-webkit-overflow-scrolling:touch;
+scroll-behavior:smooth;
+padding:0 16px 100px;
+position:relative;z-index:1;
 }
 
-/* Journal */
-.journal-entry {
-padding: 18px; border-radius: var(–radius-sm);
-border: 1px solid var(–border); margin-bottom: 10px;
+/* ===== XP BAR ===== */
+.xp-bar{margin:8px 0 16px;padding:0 4px}
+.xp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.xp-lvl{font-size:13px;font-weight:700;color:var(–gold2)}
+.xp-num{font-family:‘DM Mono’;font-size:11px;color:var(–txt3)}
+.xp-track{height:5px;background:var(–bg3);border-radius:3px;overflow:hidden;position:relative}
+.xp-fill{
+height:100%;border-radius:3px;
+background:linear-gradient(90deg,var(–gold3),var(–gold),var(–gold2));
+transition:width 0.8s cubic-bezier(0.16,1,0.3,1);
+position:relative;
 }
-.journal-date { font-family:‘JetBrains Mono’; font-size:12px; color:var(–text-muted); margin-bottom:6px; }
-.journal-text { font-size:14px; line-height:1.8; color:var(–text-secondary); }
+.xp-fill::after{
+content:’’;position:absolute;inset:0;
+background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
+animation:xpShine 2.5s infinite;
+}
+@keyframes xpShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 
-/* Input Styles */
-.input-row { display: flex; gap: 10px; margin-top: 12px; }
-.text-input {
-flex: 1; padding: 12px 16px;
-background: var(–bg-elevated); border: 1px solid var(–border);
-border-radius: var(–radius-sm); color: var(–text-primary);
-font-family: ‘Cairo’; font-size: 14px; outline: none;
-transition: border-color 0.3s;
+/* ===== MOTIVATION CARD ===== */
+.motiv{
+position:relative;overflow:hidden;
+background:linear-gradient(135deg,rgba(212,166,71,0.06),rgba(96,165,250,0.04));
+border:1px solid rgba(212,166,71,0.12);
+border-radius:var(–r);padding:20px 22px;margin-bottom:20px;
+cursor:pointer;transition:transform 0.3s,border-color 0.3s;
 }
-.text-input:focus { border-color: var(–accent-gold); }
-.text-input::placeholder { color: var(–text-muted); }
-textarea.text-input { min-height: 80px; resize: vertical; }
-.btn {
-padding: 12px 20px; border: none; border-radius: var(–radius-sm);
-font-family: ‘Cairo’; font-size: 14px; font-weight: 600;
-cursor: pointer; transition: all 0.3s;
+.motiv:active{transform:scale(0.98)}
+.motiv::before{
+content:’’;position:absolute;top:-50%;right:-50%;width:200%;height:200%;
+background:conic-gradient(from 0deg,transparent,rgba(212,166,71,0.04),transparent 30%);
+animation:rotate 8s linear infinite;
 }
-.btn-gold {
-background: linear-gradient(135deg, var(–accent-gold), var(–accent-gold-dim));
-color: #000;
-}
-.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(245,158,11,0.3); }
-.btn-ghost {
-background: transparent; border: 1px solid var(–border);
-color: var(–text-secondary);
-}
-.btn-ghost:hover { border-color: var(–text-muted); }
-.btn-sm { padding: 8px 14px; font-size: 13px; }
-.btn-danger { background: rgba(244,63,94,0.15); color: var(–accent-rose); border: 1px solid rgba(244,63,94,0.2); }
+@keyframes rotate{to{transform:rotate(360deg)}}
+.motiv-txt{position:relative;z-index:1;font-size:15px;font-weight:600;line-height:1.8;text-align:center}
 
-/* Pomodoro */
-.pomodoro-display {
-text-align: center; padding: 40px 20px;
+/* ===== BOTTOM NAV ===== */
+.nav{
+position:fixed;bottom:0;left:0;right:0;z-index:100;
+background:linear-gradient(180deg,transparent,rgba(5,10,21,0.9) 20%,rgba(5,10,21,0.98));
+padding:8px 12px calc(var(–safe-bottom) + 8px);
+display:flex;justify-content:space-around;align-items:center;
+backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
 }
-.pomodoro-time {
-font-family: ‘JetBrains Mono’; font-size: 72px; font-weight: 700;
-color: var(–text-primary); margin-bottom: 8px;
-letter-spacing: 4px;
+.nav-btn{
+display:flex;flex-direction:column;align-items:center;gap:3px;
+padding:8px 6px;border:none;background:transparent;
+color:var(–txt3);font-size:10px;font-family:‘Noto Kufi Arabic’;font-weight:500;
+cursor:pointer;transition:all 0.3s;position:relative;
+min-width:50px;
 }
-.pomodoro-label { font-size: 14px; color: var(–text-muted); margin-bottom: 24px; }
-.pomodoro-controls { display: flex; gap: 12px; justify-content: center; }
-.pomodoro-stats { display: flex; gap: 20px; justify-content: center; margin-top: 24px; }
-.pomo-stat { text-align: center; }
-.pomo-stat-val { font-family:‘JetBrains Mono’; font-size:20px; font-weight:700; color:var(–accent-gold); }
-.pomo-stat-lbl { font-size:12px; color:var(–text-muted); }
-
-/* Skill tree */
-.skill-item {
-display: flex; align-items: center; gap: 14px;
-padding: 14px 16px; border: 1px solid var(–border);
-border-radius: var(–radius-sm); margin-bottom: 8px;
-}
-.skill-level {
-width: 36px; height: 36px; border-radius: 10px;
-display: flex; align-items: center; justify-content: center;
-font-family: ‘Outfit’; font-weight: 700; font-size: 16px;
-flex-shrink: 0;
-}
-.skill-info { flex: 1; }
-.skill-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-.skill-xp-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; }
-.skill-xp-fill { height: 100%; border-radius: 2px; transition: width 0.8s; }
-
-/* Finance */
-.finance-total {
-text-align: center; padding: 20px;
-border-bottom: 1px solid var(–border); margin-bottom: 16px;
-}
-.finance-amount {
-font-family: ‘JetBrains Mono’; font-size: 36px; font-weight: 700;
-direction: ltr;
-}
-.finance-item {
-display: flex; align-items: center; justify-content: space-between;
-padding: 12px 16px; border-radius: var(–radius-sm);
-border: 1px solid var(–border); margin-bottom: 6px;
-}
-.finance-item-name { font-size: 14px; }
-.finance-item-amount {
-font-family: ‘JetBrains Mono’; font-size: 14px; font-weight: 600; direction: ltr;
-}
-.income { color: var(–accent-emerald); }
-.expense { color: var(–accent-rose); }
-
-/* Dua / Azkar */
-.dua-card {
-background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(59,130,246,0.05));
-border: 1px solid rgba(139,92,246,0.15);
-border-radius: var(–radius); padding: 24px;
-text-align: center; margin-bottom: 12px;
-}
-.dua-text {
-font-size: 20px; line-height: 2; font-weight: 600;
-margin-bottom: 12px;
-}
-.dua-counter {
-display: flex; align-items: center; justify-content: center; gap: 16px;
-}
-.counter-btn {
-width: 44px; height: 44px; border-radius: 12px;
-background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.25);
-color: var(–accent-purple); font-size: 20px;
-cursor: pointer; transition: all 0.3s;
-display: flex; align-items: center; justify-content: center;
-}
-.counter-btn:hover { background: rgba(139,92,246,0.25); }
-.counter-val {
-font-family: ‘JetBrains Mono’; font-size: 28px; font-weight: 700;
-color: var(–accent-purple); min-width: 60px;
+.nav-btn .ni{font-size:22px;transition:transform 0.3s}
+.nav-btn.active{color:var(–gold2)}
+.nav-btn.active .ni{transform:scale(1.15)}
+.nav-btn.active::before{
+content:’’;position:absolute;top:-2px;left:50%;transform:translateX(-50%);
+width:20px;height:3px;border-radius:2px;
+background:var(–gold);box-shadow:0 0 10px var(–gold);
 }
 
-/* Notes */
-.note-card {
-padding: 16px; border: 1px solid var(–border);
-border-radius: var(–radius-sm); margin-bottom: 8px;
-border-right: 3px solid var(–accent-blue);
-}
-.note-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-.note-body { font-size: 13px; color: var(–text-secondary); line-height: 1.7; }
-.note-meta { font-size:11px; color:var(–text-muted); margin-top:8px; font-family:‘JetBrains Mono’; }
+/* ===== SECTION PAGES ===== */
+.page{display:none;animation:pageIn 0.35s cubic-bezier(0.16,1,0.3,1)}
+.page.active{display:block}
+@keyframes pageIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-/* XP Bar at top */
-.xp-bar-container {
-margin-bottom: 24px;
+/* ===== CARD ===== */
+.card{
+background:var(–bg2);border:1px solid var(–border);
+border-radius:var(–r);padding:20px;margin-bottom:14px;
+transition:border-color 0.3s;position:relative;overflow:hidden;
 }
-.xp-header { display:flex; justify-content:space-between; margin-bottom:8px; }
-.xp-level { font-family:‘Outfit’; font-weight:700; font-size:14px; color:var(–accent-gold); }
-.xp-numbers { font-family:‘JetBrains Mono’; font-size:12px; color:var(–text-muted); }
-.xp-track { height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
-.xp-fill {
-height:100%; border-radius:4px;
-background: linear-gradient(90deg, var(–accent-gold), #fbbf24, var(–accent-emerald));
-transition: width 1s ease; position:relative;
+.card::before{
+content:’’;position:absolute;top:0;left:0;right:0;height:1px;
+background:linear-gradient(90deg,transparent,rgba(212,166,71,0.1),transparent);
 }
-.xp-fill::after {
-content:’’; position:absolute; inset:0;
-background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-animation: shimmer 2s infinite;
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-t{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.badge{
+font-family:‘DM Mono’;font-size:10px;padding:3px 8px;
+border-radius:20px;font-weight:500;letter-spacing:0.5px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-.grid-2, .grid-3 { grid-template-columns: 1fr; }
-.header { flex-direction: column; gap: 12px; text-align: center; }
-.header-right, .header-left { justify-content: center; }
-.pomodoro-time { font-size: 48px; }
-.motivation-banner { flex-direction: column; text-align: center; gap: 12px; }
-.app-container { padding: 12px; }
+/* ===== GRID ===== */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* ===== STAT CARDS ===== */
+.stat{
+background:var(–bg2);border:1px solid var(–border);
+border-radius:var(–r);padding:16px 14px;text-align:center;
+position:relative;overflow:hidden;transition:transform 0.2s;
+}
+.stat:active{transform:scale(0.97)}
+.stat .si{font-size:24px;margin-bottom:6px}
+.stat .sv{font-family:‘Syne’;font-size:24px;font-weight:800;margin-bottom:2px}
+.stat .sl{font-size:11px;color:var(–txt3);font-weight:500}
+.stat::after{content:’’;position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0}
+.stat.c1::after{background:linear-gradient(90deg,var(–gold),var(–gold2))}
+.stat.c2::after{background:var(–emerald)}
+.stat.c3::after{background:var(–blue)}
+.stat.c4::after{background:var(–purple)}
+.stat.c5::after{background:var(–rose)}
+.stat.c6::after{background:var(–cyan)}
+
+/* ===== HABIT ITEMS ===== */
+.habit{
+display:flex;align-items:center;gap:12px;
+padding:14px;border-radius:var(–rs);
+border:1px solid var(–border);margin-bottom:8px;
+transition:all 0.3s;cursor:pointer;
+}
+.habit:active{transform:scale(0.98)}
+.habit.done{border-color:rgba(52,211,153,0.25);background:rgba(52,211,153,0.04)}
+.hchk{
+width:26px;height:26px;border-radius:8px;
+border:2px solid var(–txt3);
+display:flex;align-items:center;justify-content:center;
+font-size:13px;transition:all 0.3s;flex-shrink:0;
+}
+.habit.done .hchk{background:var(–emerald);border-color:var(–emerald);color:#fff}
+.hname{flex:1;font-size:13px;font-weight:500}
+.hstreak{
+font-family:‘DM Mono’;font-size:11px;
+color:var(–gold);background:rgba(212,166,71,0.1);
+padding:2px 8px;border-radius:12px;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+/* ===== GOAL ITEMS ===== */
+.goal{padding:16px;border:1px solid var(–border);border-radius:var(–rs);margin-bottom:10px}
+.goal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.goal-nm{font-size:14px;font-weight:600}
+.goal-pct{font-family:‘DM Mono’;font-size:12px;color:var(–gold)}
+.gbar{height:4px;background:var(–bg3);border-radius:2px;overflow:hidden}
+.gfill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(–gold3),var(–gold),var(–emerald));transition:width 0.8s}
+.goal-btns{display:flex;gap:6px;margin-top:8px}
 
-/* Delete btn */
-.delete-btn {
-width: 28px; height: 28px; border-radius: 6px;
-background: transparent; border: none;
-color: var(–text-muted); cursor: pointer;
-display: flex; align-items: center; justify-content: center;
-font-size: 14px; transition: all 0.2s; flex-shrink: 0;
+/* ===== INPUTS ===== */
+.inp{
+width:100%;padding:12px 14px;
+background:var(–bg3);border:1px solid var(–border);
+border-radius:var(–rs);color:var(–txt);
+font-family:‘Noto Kufi Arabic’;font-size:14px;outline:none;
+transition:border-color 0.3s;
 }
-.delete-btn:hover { color: var(–accent-rose); background: rgba(244,63,94,0.1); }
+.inp:focus{border-color:rgba(212,166,71,0.4)}
+.inp::placeholder{color:var(–txt3)}
+textarea.inp{min-height:70px;resize:none;line-height:1.7}
+.inp-row{display:flex;gap:8px;margin-top:10px}
+.btn{
+padding:10px 16px;border:none;border-radius:var(–rs);
+font-family:‘Noto Kufi Arabic’;font-size:13px;font-weight:600;
+cursor:pointer;transition:all 0.2s;
+}
+.btn:active{transform:scale(0.96)}
+.btn-g{background:linear-gradient(135deg,var(–gold),var(–gold3));color:#050a15;box-shadow:0 4px 15px rgba(212,166,71,0.2)}
+.btn-o{background:var(–bg3);border:1px solid var(–border);color:var(–txt2)}
+.btn-d{background:rgba(251,113,133,0.1);color:var(–rose);border:1px solid rgba(251,113,133,0.15)}
+.btn-s{padding:8px 12px;font-size:12px}
+.del{
+width:26px;height:26px;border-radius:7px;
+background:transparent;border:none;color:var(–txt3);
+cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;
+transition:all 0.2s;flex-shrink:0;
+}
+.del:hover,.del:active{color:var(–rose);background:rgba(251,113,133,0.1)}
 
-.empty-state {
-text-align: center; padding: 40px 20px;
-color: var(–text-muted); font-size: 14px;
+/* ===== SKILLS ===== */
+.skill{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(–border);border-radius:var(–rs);margin-bottom:8px}
+.sk-lv{
+width:34px;height:34px;border-radius:10px;
+display:flex;align-items:center;justify-content:center;
+font-family:‘Syne’;font-weight:700;font-size:15px;flex-shrink:0;
 }
-.empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+.sk-info{flex:1}
+.sk-nm{font-size:13px;font-weight:600;margin-bottom:3px}
+.sk-bar{height:3px;background:var(–bg3);border-radius:2px}
+.sk-fl{height:100%;border-radius:2px;transition:width 0.8s}
+
+/* ===== FINANCE ===== */
+.fin-total{text-align:center;padding:18px 0;border-bottom:1px solid var(–border);margin-bottom:14px}
+.fin-amt{font-family:‘DM Mono’;font-size:32px;font-weight:700;direction:ltr}
+.fin-item{
+display:flex;align-items:center;justify-content:space-between;
+padding:12px;border:1px solid var(–border);border-radius:var(–rs);margin-bottom:6px;
+}
+.fin-nm{font-size:13px}
+.fin-val{font-family:‘DM Mono’;font-size:13px;font-weight:600;direction:ltr}
+.income{color:var(–emerald)}.expense{color:var(–rose)}
+
+/* ===== POMODORO ===== */
+.pomo-display{text-align:center;padding:30px 16px}
+.pomo-ring{
+width:200px;height:200px;margin:0 auto 20px;
+border-radius:50%;position:relative;
+display:flex;align-items:center;justify-content:center;
+}
+.pomo-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.pomo-ring circle{fill:none;stroke-width:4;stroke-linecap:round}
+.pomo-ring .track{stroke:var(–bg3)}
+.pomo-ring .progress{stroke:var(–gold);transition:stroke-dashoffset 1s;filter:drop-shadow(0 0 8px rgba(212,166,71,0.3))}
+.pomo-time{font-family:‘DM Mono’;font-size:48px;font-weight:700;position:relative;z-index:1;letter-spacing:2px}
+.pomo-lbl{font-size:12px;color:var(–txt3);margin-bottom:20px}
+.pomo-ctrls{display:flex;gap:10px;justify-content:center}
+.pomo-stats{display:flex;gap:24px;justify-content:center;margin-top:20px}
+.ps{text-align:center}
+.ps-v{font-family:‘DM Mono’;font-size:18px;font-weight:700;color:var(–gold)}
+.ps-l{font-size:11px;color:var(–txt3)}
+
+/* ===== JOURNAL ===== */
+.jentry{padding:14px;border:1px solid var(–border);border-radius:var(–rs);margin-bottom:8px}
+.jdate{font-family:‘DM Mono’;font-size:11px;color:var(–txt3);margin-bottom:4px;display:flex;align-items:center;justify-content:space-between}
+.jtxt{font-size:13px;line-height:1.8;color:var(–txt2)}
+
+/* ===== AZKAR ===== */
+.azkar-card{
+background:linear-gradient(135deg,rgba(167,139,250,0.06),rgba(96,165,250,0.04));
+border:1px solid rgba(167,139,250,0.12);
+border-radius:var(–r);padding:22px;text-align:center;margin-bottom:12px;
+transition:transform 0.2s;
+}
+.azkar-card:active{transform:scale(0.98)}
+.azkar-card.completed{border-color:rgba(52,211,153,0.25);background:linear-gradient(135deg,rgba(52,211,153,0.06),rgba(52,211,153,0.03))}
+.az-txt{font-size:20px;line-height:2;font-weight:600;margin-bottom:12px}
+.az-counter{display:flex;align-items:center;justify-content:center;gap:20px}
+.az-btn{
+width:44px;height:44px;border-radius:14px;
+background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);
+color:var(–purple);font-size:22px;cursor:pointer;
+display:flex;align-items:center;justify-content:center;transition:all 0.2s;
+}
+.az-btn:active{transform:scale(0.92);background:rgba(167,139,250,0.2)}
+.az-val{font-family:‘DM Mono’;font-size:24px;font-weight:700;color:var(–purple);min-width:70px}
+
+/* ===== RAMADAN IMSAKIYA ===== */
+.ramadan-header{
+text-align:center;margin-bottom:16px;
+padding:20px;
+background:linear-gradient(135deg,rgba(212,166,71,0.08),rgba(167,139,250,0.05));
+border:1px solid rgba(212,166,71,0.12);
+border-radius:var(–r);position:relative;overflow:hidden;
+}
+.ramadan-header::before{
+content:‘🌙’;position:absolute;top:10px;left:20px;font-size:30px;opacity:0.15;
+}
+.ramadan-header::after{
+content:‘✨’;position:absolute;bottom:10px;right:20px;font-size:24px;opacity:0.1;
+}
+.ram-title{font-size:20px;font-weight:800;color:var(–gold2);margin-bottom:4px}
+.ram-sub{font-size:12px;color:var(–txt3)}
+.ram-countdown{
+margin:16px 0;padding:16px;
+background:var(–bg2);border:1px solid var(–border);
+border-radius:var(–r);text-align:center;
+}
+.ram-cd-title{font-size:13px;color:var(–txt2);margin-bottom:10px}
+.ram-cd-time{display:flex;justify-content:center;gap:12px}
+.ram-cd-unit{text-align:center}
+.ram-cd-val{font-family:‘DM Mono’;font-size:28px;font-weight:700;color:var(–gold2)}
+.ram-cd-lbl{font-size:10px;color:var(–txt3);margin-top:2px}
+.ram-today{
+padding:18px;background:var(–bg2);border:1px solid rgba(212,166,71,0.15);
+border-radius:var(–r);margin-bottom:12px;
+}
+.ram-today-title{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ram-times{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ram-time-card{
+padding:12px;background:var(–bg3);border-radius:var(–rs);text-align:center;
+border:1px solid var(–border);
+}
+.ram-time-lbl{font-size:11px;color:var(–txt3);margin-bottom:4px}
+.ram-time-val{font-family:‘DM Mono’;font-size:18px;font-weight:700}
+.ram-time-card.fajr .ram-time-val{color:var(–cyan)}
+.ram-time-card.sunrise .ram-time-val{color:var(–amber)}
+.ram-time-card.dhuhr .ram-time-val{color:var(–gold2)}
+.ram-time-card.asr .ram-time-val{color:var(–blue)}
+.ram-time-card.maghrib .ram-time-val{color:var(–emerald)}
+.ram-time-card.isha .ram-time-val{color:var(–purple)}
+.ram-day-list{max-height:300px;overflow-y:auto}
+.ram-day{
+display:flex;align-items:center;justify-content:space-between;
+padding:10px 12px;border-bottom:1px solid var(–border);
+font-size:13px;
+}
+.ram-day:last-child{border-bottom:none}
+.ram-day.today{background:rgba(212,166,71,0.06);border-radius:var(–rs)}
+.ram-day-num{font-family:‘DM Mono’;font-weight:600;color:var(–gold);width:30px}
+.ram-day-date{color:var(–txt2);flex:1;text-align:center;font-size:12px}
+.ram-day-times{display:flex;gap:16px;font-family:‘DM Mono’;font-size:12px;color:var(–txt2)}
+.ram-imsak{color:var(–cyan)}
+.ram-iftar{color:var(–emerald)}
+
+/* ===== NOTES ===== */
+.note{
+padding:14px;border:1px solid var(–border);
+border-radius:var(–rs);margin-bottom:8px;
+border-right:3px solid var(–blue);
+}
+.note-t{font-size:13px;font-weight:600;margin-bottom:4px}
+.note-b{font-size:12px;color:var(–txt2);line-height:1.7}
+.note-m{font-size:10px;color:var(–txt3);margin-top:6px;font-family:‘DM Mono’}
+
+/* ===== EMPTY STATE ===== */
+.empty{text-align:center;padding:30px 16px;color:var(–txt3);font-size:13px}
+.empty-i{font-size:36px;margin-bottom:10px;opacity:0.4}
+
+/* ===== SELECT ===== */
+select.inp{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘12’ height=‘12’ fill=’%234a5878’ viewBox=‘0 0 16 16’%3E%3Cpath d=‘M8 11L3 6h10z’/%3E%3C/svg%3E”);background-repeat:no-repeat;background-position:left 12px center;padding-left:30px}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:380px){
+.g2,.g3{grid-template-columns:1fr 1fr}
+.pomo-ring{width:160px;height:160px}
+.pomo-time{font-size:38px}
+}
 </style>
 
 </head>
 <body>
 
-<div class="stars" id="stars"></div>
-<div class="ambient-bg"></div>
+<div class="app">
+  <!-- Background -->
+  <div class="bg-canvas">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="grid-pattern"></div>
+  <div class="noise"></div>
 
-<div class="app-container">
   <!-- Header -->
+
   <header class="header">
-    <div class="header-right">
-      <div class="logo-icon">B</div>
-      <div class="header-title">
-        <h1 id="headerTitle">لوحة حياة بدر</h1>
-        <div class="header-subtitle" id="headerSub">Bader's Life OS — Your Command Center</div>
+    <div class="h-right">
+      <div class="logo">B</div>
+      <div>
+        <div class="h-title" id="hTitle">BaderOS</div>
+        <div class="h-sub">LIFE COMMAND CENTER</div>
       </div>
     </div>
-    <div class="header-left">
-      <div class="greeting-time" id="clockDisplay"></div>
-      <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN / ع</button>
+    <div class="h-left">
+      <div class="clock" id="clock"></div>
+      <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
     </div>
   </header>
 
-  <!-- XP Bar -->
+  <!-- Main Content -->
 
-  <div class="xp-bar-container">
-    <div class="xp-header">
-      <span class="xp-level" id="xpLevel">⭐ Level 1 — مبتدئ طموح</span>
-      <span class="xp-numbers" id="xpNumbers">0 / 100 XP</span>
-    </div>
-    <div class="xp-track">
-      <div class="xp-fill" id="xpFill" style="width:0%"></div>
-    </div>
-  </div>
-
-  <!-- Motivation -->
-
-  <div class="motivation-banner" onclick="nextMotivation()">
-    <div class="motivation-text" id="motivationText">بسم الله... يومك الجديد فرصة جديدة 🌟</div>
-    <div class="motivation-icon">✨</div>
-  </div>
-
-  <!-- Tabs -->
-
-  <nav class="tab-nav" id="tabNav">
-    <button class="tab-btn active" data-tab="overview">
-      <span class="tab-icon">📊</span><span class="tab-text" data-ar="نظرة عامة" data-en="Overview">نظرة عامة</span>
-    </button>
-    <button class="tab-btn" data-tab="habits">
-      <span class="tab-icon">🔥</span><span class="tab-text" data-ar="العادات" data-en="Habits">العادات</span>
-    </button>
-    <button class="tab-btn" data-tab="goals">
-      <span class="tab-icon">🎯</span><span class="tab-text" data-ar="الأهداف" data-en="Goals">الأهداف</span>
-    </button>
-    <button class="tab-btn" data-tab="skills">
-      <span class="tab-icon">⚡</span><span class="tab-text" data-ar="المهارات" data-en="Skills">المهارات</span>
-    </button>
-    <button class="tab-btn" data-tab="finance">
-      <span class="tab-icon">💰</span><span class="tab-text" data-ar="المالية" data-en="Finance">المالية</span>
-    </button>
-    <button class="tab-btn" data-tab="pomodoro">
-      <span class="tab-icon">⏱️</span><span class="tab-text" data-ar="بومودورو" data-en="Pomodoro">بومودورو</span>
-    </button>
-    <button class="tab-btn" data-tab="journal">
-      <span class="tab-icon">📝</span><span class="tab-text" data-ar="اليوميات" data-en="Journal">اليوميات</span>
-    </button>
-    <button class="tab-btn" data-tab="azkar">
-      <span class="tab-icon">🤲</span><span class="tab-text" data-ar="أذكار" data-en="Azkar">أذكار</span>
-    </button>
-    <button class="tab-btn" data-tab="notes">
-      <span class="tab-icon">📌</span><span class="tab-text" data-ar="ملاحظات" data-en="Notes">ملاحظات</span>
-    </button>
-  </nav>
-
-  <!-- ============ OVERVIEW ============ -->
-
-  <div class="tab-content active" id="tab-overview">
-    <div class="grid-3" id="overviewStats">
-      <div class="stat-card gold">
-        <div class="stat-icon">🔥</div>
-        <div class="stat-value" id="statHabits">0/0</div>
-        <div class="stat-label" data-ar="عادات اليوم" data-en="Today's Habits">عادات اليوم</div>
-      </div>
-      <div class="stat-card emerald">
-        <div class="stat-icon">🎯</div>
-        <div class="stat-value" id="statGoals">0</div>
-        <div class="stat-label" data-ar="أهداف نشطة" data-en="Active Goals">أهداف نشطة</div>
-      </div>
-      <div class="stat-card blue">
-        <div class="stat-icon">⏱️</div>
-        <div class="stat-value" id="statPomo">0</div>
-        <div class="stat-label" data-ar="جلسات تركيز" data-en="Focus Sessions">جلسات تركيز</div>
-      </div>
-      <div class="stat-card purple">
-        <div class="stat-icon">⚡</div>
-        <div class="stat-value" id="statXP">0</div>
-        <div class="stat-label" data-ar="نقاط الخبرة" data-en="Total XP">نقاط الخبرة</div>
-      </div>
-      <div class="stat-card rose">
-        <div class="stat-icon">📝</div>
-        <div class="stat-value" id="statJournal">0</div>
-        <div class="stat-label" data-ar="يوميات" data-en="Journal Entries">يوميات</div>
-      </div>
-      <div class="stat-card cyan">
-        <div class="stat-icon">🤲</div>
-        <div class="stat-value" id="statAzkar">0</div>
-        <div class="stat-label" data-ar="أذكار اليوم" data-en="Today's Azkar">أذكار اليوم</div>
-      </div>
-    </div>
+  <main class="main" id="mainScroll">
 
 ```
-<div class="grid-2" style="margin-top:16px">
+<!-- XP -->
+<div class="xp-bar">
+  <div class="xp-top">
+    <span class="xp-lvl" id="xpLvl">⭐ Level 1</span>
+    <span class="xp-num" id="xpNum">0 / 100 XP</span>
+  </div>
+  <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+</div>
+
+<!-- Motivation -->
+<div class="motiv" onclick="nextMotiv()">
+  <div class="motiv-txt" id="motivTxt">بسم الله... يومك الجديد فرصة جديدة 🌟</div>
+</div>
+
+<!-- === PAGES === -->
+
+<!-- OVERVIEW -->
+<div class="page active" id="p-home">
+  <div class="g3" id="overStats"></div>
+  <div style="height:14px"></div>
   <div class="card">
-    <div class="card-header">
-      <div class="card-title">🔥 <span data-ar="عادات اليوم" data-en="Today's Habits">عادات اليوم</span></div>
-    </div>
-    <div id="overviewHabits"><div class="empty-state"><div class="empty-icon">🔥</div>أضف عادات من تبويب العادات</div></div>
+    <div class="card-hd"><div class="card-t">🔥 <span data-ar="عادات اليوم" data-en="Today's Habits">عادات اليوم</span></div></div>
+    <div id="ovHabits"></div>
   </div>
   <div class="card">
-    <div class="card-header">
-      <div class="card-title">🎯 <span data-ar="تقدم الأهداف" data-en="Goals Progress">تقدم الأهداف</span></div>
+    <div class="card-hd"><div class="card-t">🎯 <span data-ar="تقدم الأهداف" data-en="Goals Progress">تقدم الأهداف</span></div></div>
+    <div id="ovGoals"></div>
+  </div>
+</div>
+
+<!-- HABITS -->
+<div class="page" id="p-habits">
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-t">🔥 <span data-ar="عاداتي" data-en="My Habits">عاداتي</span></div>
+      <div class="badge" style="background:rgba(212,166,71,0.1);color:var(--gold)" id="habScore">0%</div>
     </div>
-    <div id="overviewGoals"><div class="empty-state"><div class="empty-icon">🎯</div>أضف أهداف من تبويب الأهداف</div></div>
+    <div id="habList"></div>
+    <div class="inp-row">
+      <input class="inp" id="habInp" placeholder="عادة جديدة... / New habit..." onkeydown="if(event.key==='Enter')addHabit()">
+      <button class="btn btn-g" onclick="addHabit()">+</button>
+    </div>
+  </div>
+</div>
+
+<!-- GOALS -->
+<div class="page" id="p-goals">
+  <div class="card">
+    <div class="card-hd"><div class="card-t">🎯 <span data-ar="أهدافي" data-en="My Goals">أهدافي</span></div></div>
+    <div id="goalList"></div>
+    <div class="inp-row">
+      <input class="inp" id="goalInp" placeholder="هدف جديد... / New goal..." onkeydown="if(event.key==='Enter')addGoal()">
+      <button class="btn btn-g" onclick="addGoal()">+</button>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="page" id="p-skills">
+  <div class="card">
+    <div class="card-hd"><div class="card-t">⚡ <span data-ar="مهاراتي" data-en="Skills">مهاراتي</span></div></div>
+    <div id="skList"></div>
+    <div class="inp-row">
+      <input class="inp" id="skInp" placeholder="مهارة جديدة... / New skill..." onkeydown="if(event.key==='Enter')addSkill()">
+      <button class="btn btn-g" onclick="addSkill()">+</button>
+    </div>
+  </div>
+</div>
+
+<!-- FINANCE -->
+<div class="page" id="p-finance">
+  <div class="card">
+    <div class="fin-total">
+      <div style="font-size:12px;color:var(--txt3);margin-bottom:2px" data-ar="الرصيد" data-en="Balance">الرصيد</div>
+      <div class="fin-amt" id="finBal">$0.00</div>
+    </div>
+    <div id="finList"></div>
+    <div class="inp-row" style="margin-top:10px">
+      <input class="inp" id="finDesc" placeholder="الوصف" style="flex:2">
+      <input class="inp" id="finAmt" type="number" placeholder="$" style="flex:1;direction:ltr">
+      <button class="btn btn-s" onclick="addFin('income')" style="background:rgba(52,211,153,0.15);color:var(--emerald)">+</button>
+      <button class="btn btn-s btn-d" onclick="addFin('expense')">−</button>
+    </div>
+  </div>
+</div>
+
+<!-- POMODORO -->
+<div class="page" id="p-pomo">
+  <div class="card">
+    <div class="pomo-display">
+      <div class="pomo-ring">
+        <svg viewBox="0 0 200 200">
+          <circle class="track" cx="100" cy="100" r="90"/>
+          <circle class="progress" id="pomoCircle" cx="100" cy="100" r="90" stroke-dasharray="565.48" stroke-dashoffset="0"/>
+        </svg>
+        <div class="pomo-time" id="pomoTime">25:00</div>
+      </div>
+      <div class="pomo-lbl" id="pomoLbl" data-ar="وقت التركيز" data-en="Focus Time">وقت التركيز</div>
+      <div class="pomo-ctrls">
+        <button class="btn btn-g" id="pomoBtn" onclick="togglePomo()"><span data-ar="ابدأ" data-en="Start">ابدأ</span></button>
+        <button class="btn btn-o" onclick="resetPomo()"><span data-ar="إعادة" data-en="Reset">إعادة</span></button>
+      </div>
+      <div class="pomo-stats">
+        <div class="ps"><div class="ps-v" id="pomoSess">0</div><div class="ps-l" data-ar="جلسات" data-en="Sessions">جلسات</div></div>
+        <div class="ps"><div class="ps-v" id="pomoMin">0</div><div class="ps-l" data-ar="دقائق" data-en="Minutes">دقائق</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JOURNAL -->
+<div class="page" id="p-journal">
+  <div class="card">
+    <div class="card-hd"><div class="card-t">📝 <span data-ar="يومياتي" data-en="Journal">يومياتي</span></div></div>
+    <textarea class="inp" id="jInp" placeholder="أفكارك اليوم... / Your thoughts..."></textarea>
+    <div class="inp-row">
+      <select class="inp" id="jMood" style="flex:0 0 auto;width:auto">
+        <option value="😊">😊</option><option value="😐">😐</option><option value="😔">😔</option>
+        <option value="🔥">🔥</option><option value="😤">😤</option><option value="🤲">🤲</option>
+      </select>
+      <button class="btn btn-g" onclick="addJournal()"><span data-ar="حفظ" data-en="Save">حفظ</span></button>
+    </div>
+    <div id="jList" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- AZKAR -->
+<div class="page" id="p-azkar">
+  <div id="azList"></div>
+</div>
+
+<!-- RAMADAN -->
+<div class="page" id="p-ramadan">
+  <div class="ramadan-header">
+    <div class="ram-title">🌙 <span data-ar="إمساكية رمضان" data-en="Ramadan Imsakiya">إمساكية رمضان</span></div>
+    <div class="ram-sub" data-ar="مواقيت الصلاة والصيام — ليبيا 🇱🇾" data-en="Prayer & Fasting Times — Libya 🇱🇾">مواقيت الصلاة والصيام — ليبيا 🇱🇾</div>
+  </div>
+  <div class="ram-countdown" id="ramCountdown"></div>
+  <div class="ram-today" id="ramToday"></div>
+  <div class="card">
+    <div class="card-hd"><div class="card-t">📅 <span data-ar="جدول الشهر" data-en="Monthly Schedule">جدول الشهر</span></div></div>
+    <div class="ram-day-list" id="ramDays"></div>
+  </div>
+</div>
+
+<!-- NOTES -->
+<div class="page" id="p-notes">
+  <div class="card">
+    <div class="card-hd"><div class="card-t">📌 <span data-ar="ملاحظاتي" data-en="Notes">ملاحظاتي</span></div></div>
+    <input class="inp" id="nTitle" placeholder="العنوان / Title" style="margin-bottom:6px">
+    <textarea class="inp" id="nBody" placeholder="الملاحظة... / Note..."></textarea>
+    <div class="inp-row"><button class="btn btn-g" onclick="addNote()"><span data-ar="حفظ" data-en="Save">حفظ</span></button></div>
+    <div id="nList" style="margin-top:12px"></div>
   </div>
 </div>
 ```
 
-  </div>
+  </main>
 
-  <!-- ============ HABITS ============ -->
+  <!-- Bottom Nav -->
 
-  <div class="tab-content" id="tab-habits">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">🔥 <span data-ar="عاداتي اليومية" data-en="Daily Habits">عاداتي اليومية</span></div>
-        <div class="card-badge" style="background:rgba(245,158,11,0.15);color:var(--accent-gold)" id="habitScore">0%</div>
-      </div>
-      <div id="habitsList"></div>
-      <div class="input-row">
-        <input class="text-input" id="habitInput" placeholder="أضف عادة جديدة... / Add new habit..." onkeypress="if(event.key==='Enter')addHabit()">
-        <button class="btn btn-gold" onclick="addHabit()">+</button>
-      </div>
-    </div>
-  </div>
+  <nav class="nav">
+    <button class="nav-btn active" data-p="home" onclick="goPage('home')">
+      <span class="ni">📊</span><span data-ar="الرئيسية" data-en="Home">الرئيسية</span>
+    </button>
+    <button class="nav-btn" data-p="habits" onclick="goPage('habits')">
+      <span class="ni">🔥</span><span data-ar="العادات" data-en="Habits">العادات</span>
+    </button>
+    <button class="nav-btn" data-p="goals" onclick="goPage('goals')">
+      <span class="ni">🎯</span><span data-ar="الأهداف" data-en="Goals">الأهداف</span>
+    </button>
+    <button class="nav-btn" data-p="pomo" onclick="goPage('pomo')">
+      <span class="ni">⏱️</span><span data-ar="تركيز" data-en="Focus">تركيز</span>
+    </button>
+    <button class="nav-btn" data-p="ramadan" onclick="goPage('ramadan')">
+      <span class="ni">🌙</span><span data-ar="رمضان" data-en="Ramadan">رمضان</span>
+    </button>
+    <button class="nav-btn" data-p="more" onclick="toggleMore()">
+      <span class="ni">⋯</span><span data-ar="المزيد" data-en="More">المزيد</span>
+    </button>
+  </nav>
 
-  <!-- ============ GOALS ============ -->
+  <!-- More Menu -->
 
-  <div class="tab-content" id="tab-goals">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">🎯 <span data-ar="أهدافي" data-en="My Goals">أهدافي</span></div>
-      </div>
-      <div id="goalsList"></div>
-      <div class="input-row">
-        <input class="text-input" id="goalInput" placeholder="أضف هدف جديد... / Add new goal..." onkeypress="if(event.key==='Enter')addGoal()">
-        <button class="btn btn-gold" onclick="addGoal()">+</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ SKILLS ============ -->
-
-  <div class="tab-content" id="tab-skills">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">⚡ <span data-ar="شجرة المهارات" data-en="Skill Tree">شجرة المهارات</span></div>
-      </div>
-      <div id="skillsList"></div>
-      <div class="input-row">
-        <input class="text-input" id="skillInput" placeholder="أضف مهارة... / Add skill..." onkeypress="if(event.key==='Enter')addSkill()">
-        <button class="btn btn-gold" onclick="addSkill()">+</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ FINANCE ============ -->
-
-  <div class="tab-content" id="tab-finance">
-    <div class="card">
-      <div class="finance-total">
-        <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px" data-ar="الرصيد" data-en="Balance">الرصيد</div>
-        <div class="finance-amount" id="financeBalance">$0.00</div>
-      </div>
-      <div id="financeList"></div>
-      <div class="input-row" style="margin-top:12px">
-        <input class="text-input" id="financeDesc" placeholder="الوصف / Description" style="flex:2">
-        <input class="text-input" id="financeAmount" type="number" placeholder="المبلغ / Amount" style="flex:1;direction:ltr">
-        <button class="btn btn-gold btn-sm" onclick="addFinance('income')" style="background:rgba(16,185,129,0.2);color:var(--accent-emerald)">+</button>
-        <button class="btn btn-sm btn-danger" onclick="addFinance('expense')">−</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ POMODORO ============ -->
-
-  <div class="tab-content" id="tab-pomodoro">
-    <div class="card">
-      <div class="pomodoro-display">
-        <div class="pomodoro-time" id="pomoTime">25:00</div>
-        <div class="pomodoro-label" id="pomoLabel" data-ar="وقت التركيز" data-en="Focus Time">وقت التركيز</div>
-        <div class="pomodoro-controls">
-          <button class="btn btn-gold" id="pomoStartBtn" onclick="togglePomo()">
-            <span data-ar="ابدأ" data-en="Start">ابدأ</span>
-          </button>
-          <button class="btn btn-ghost" onclick="resetPomo()">
-            <span data-ar="إعادة" data-en="Reset">إعادة</span>
-          </button>
-        </div>
-        <div class="pomodoro-stats">
-          <div class="pomo-stat">
-            <div class="pomo-stat-val" id="pomoSessions">0</div>
-            <div class="pomo-stat-lbl" data-ar="جلسات" data-en="Sessions">جلسات</div>
-          </div>
-          <div class="pomo-stat">
-            <div class="pomo-stat-val" id="pomoTotalMin">0</div>
-            <div class="pomo-stat-lbl" data-ar="دقائق تركيز" data-en="Focus Mins">دقائق تركيز</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ JOURNAL ============ -->
-
-  <div class="tab-content" id="tab-journal">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">📝 <span data-ar="يومياتي" data-en="My Journal">يومياتي</span></div>
-      </div>
-      <div style="margin-bottom:12px">
-        <textarea class="text-input" id="journalInput" placeholder="اكتب أفكارك... ما الذي حدث اليوم؟ / Write your thoughts..."></textarea>
-        <div class="input-row" style="margin-top:8px">
-          <select class="text-input" id="journalMood" style="flex:0 0 auto;width:auto">
-            <option value="😊">😊 سعيد</option>
-            <option value="😐">😐 عادي</option>
-            <option value="😔">😔 حزين</option>
-            <option value="🔥">🔥 متحمس</option>
-            <option value="😤">😤 محبط</option>
-            <option value="🤲">🤲 شاكر</option>
-          </select>
-          <button class="btn btn-gold" onclick="addJournal()"><span data-ar="حفظ" data-en="Save">حفظ</span></button>
-        </div>
-      </div>
-      <div id="journalList"></div>
-    </div>
-  </div>
-
-  <!-- ============ AZKAR ============ -->
-
-  <div class="tab-content" id="tab-azkar">
-    <div id="azkarList"></div>
-  </div>
-
-  <!-- ============ NOTES ============ -->
-
-  <div class="tab-content" id="tab-notes">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">📌 <span data-ar="ملاحظاتي" data-en="My Notes">ملاحظاتي</span></div>
-      </div>
-      <div style="margin-bottom:12px">
-        <input class="text-input" id="noteTitle" placeholder="العنوان / Title" style="margin-bottom:8px">
-        <textarea class="text-input" id="noteBody" placeholder="الملاحظة... / Note content..."></textarea>
-        <div class="input-row" style="margin-top:8px">
-          <button class="btn btn-gold" onclick="addNote()"><span data-ar="حفظ" data-en="Save">حفظ</span></button>
-        </div>
-      </div>
-      <div id="notesList"></div>
+  <div id="moreMenu" style="display:none;position:fixed;bottom:80px;left:12px;right:12px;z-index:200;
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:8px;
+    box-shadow:0 -10px 40px rgba(0,0,0,0.5);backdrop-filter:blur(20px);">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+      <button class="nav-btn" onclick="goPage('skills');closeMore()" style="padding:14px 8px">
+        <span class="ni">⚡</span><span data-ar="مهارات" data-en="Skills">مهارات</span>
+      </button>
+      <button class="nav-btn" onclick="goPage('finance');closeMore()" style="padding:14px 8px">
+        <span class="ni">💰</span><span data-ar="مالية" data-en="Finance">مالية</span>
+      </button>
+      <button class="nav-btn" onclick="goPage('journal');closeMore()" style="padding:14px 8px">
+        <span class="ni">📝</span><span data-ar="يوميات" data-en="Journal">يوميات</span>
+      </button>
+      <button class="nav-btn" onclick="goPage('azkar');closeMore()" style="padding:14px 8px">
+        <span class="ni">🤲</span><span data-ar="أذكار" data-en="Azkar">أذكار</span>
+      </button>
+      <button class="nav-btn" onclick="goPage('notes');closeMore()" style="padding:14px 8px">
+        <span class="ni">📌</span><span data-ar="ملاحظات" data-en="Notes">ملاحظات</span>
+      </button>
     </div>
   </div>
 </div>
 
 <script>
-// ==================== STATE ====================
-let state = {
-  lang: 'ar',
-  xp: 0,
-  habits: [],
-  goals: [],
-  skills: [],
-  finance: [],
-  journal: [],
-  notes: [],
-  pomoSessions: 0,
-  pomoTotalMin: 0,
-  azkarCounts: {},
-  motivationIdx: 0
-};
+// ===== STATE =====
+let S={lang:'ar',xp:0,habits:[],goals:[],skills:[],finance:[],journal:[],notes:[],
+  pomoSess:0,pomoMin:0,azkar:{},motIdx:0};
+const LS_KEY='bader-os-v2';
 
-// Load from localStorage
-function loadState() {
-  try {
-    const saved = localStorage.getItem('bader-life-os');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      state = { ...state, ...parsed };
-      // Reset habits completion if new day
-      const today = new Date().toDateString();
-      if (parsed.lastHabitDate !== today) {
-        state.habits.forEach(h => h.completed = false);
-        state.azkarCounts = {};
-        state.lastHabitDate = today;
-      }
-    }
-  } catch(e) {}
+function load(){try{const d=localStorage.getItem(LS_KEY);if(d){const p=JSON.parse(d);Object.assign(S,p);
+const t=new Date().toDateString();if(S.lastDate!==t){S.habits.forEach(h=>h.done=false);S.azkar={};S.lastDate=t}}}catch(e){}}
+function save(){S.lastDate=new Date().toDateString();try{localStorage.setItem(LS_KEY,JSON.stringify(S))}catch(e){}}
+
+// ===== MOTIVATIONS =====
+const MOT=[
+  {ar:'بسم الله... يومك الجديد فرصة جديدة 🌟',en:'Bismillah... A new day, a new chance 🌟'},
+  {ar:'الصبر مفتاح الفرج... أنت أقرب مما تظن 💪',en:"Patience is key... You're closer than you think 💪"},
+  {ar:'"وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا"',en:'"Whoever fears Allah, He will make a way out"'},
+  {ar:'كل سطر كود يقربك من حلمك 🚀',en:'Every line of code gets you closer 🚀'},
+  {ar:'من ليبيا للعالمية 🇱🇾',en:'From Libya to the world 🇱🇾'},
+  {ar:'"إِنَّ مَعَ الْعُسْرِ يُسْرًا"',en:'"With hardship comes ease"'},
+  {ar:'ربك يراك وأنت تحارب... الأجر محفوظ 🤲',en:'Allah sees your struggle... Reward is preserved 🤲'},
+  {ar:'تعلمك سلاحك... لا تتوقف 🔥',en:"Your knowledge is your weapon... Don't stop 🔥"},
+];
+function nextMotiv(){S.motIdx=(S.motIdx+1)%MOT.length;
+document.getElementById('motivTxt').textContent=S.lang==='ar'?MOT[S.motIdx].ar:MOT[S.motIdx].en}
+
+// ===== CLOCK =====
+function tick(){const n=new Date();
+const t=n.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+const d=n.toLocaleDateString(S.lang==='ar'?'ar-LY':'en-US',{weekday:'short',month:'short',day:'numeric'});
+document.getElementById('clock').innerHTML=`<div style="font-weight:600">${t}</div><div style="font-size:10px">${d}</div>`}
+
+// ===== LANGUAGE =====
+function toggleLang(){S.lang=S.lang==='ar'?'en':'ar';
+document.documentElement.dir=S.lang==='ar'?'rtl':'ltr';
+document.documentElement.lang=S.lang;
+document.querySelectorAll('[data-ar]').forEach(e=>e.textContent=S.lang==='ar'?e.dataset.ar:e.dataset.en);
+document.getElementById('langBtn').textContent=S.lang==='ar'?'EN':'ع';
+document.getElementById('motivTxt').textContent=S.lang==='ar'?MOT[S.motIdx].ar:MOT[S.motIdx].en;
+save();renderAll()}
+
+// ===== NAVIGATION =====
+let moreOpen=false;
+function goPage(p){
+  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+  document.getElementById('p-'+p).classList.add('active');
+  document.querySelectorAll('.nav-btn[data-p]').forEach(b=>{b.classList.toggle('active',b.dataset.p===p)});
+  document.getElementById('mainScroll').scrollTop=0;
+  closeMore();
+}
+function toggleMore(){moreOpen=!moreOpen;document.getElementById('moreMenu').style.display=moreOpen?'block':'none'}
+function closeMore(){moreOpen=false;document.getElementById('moreMenu').style.display='none'}
+document.addEventListener('click',e=>{if(moreOpen&&!e.target.closest('#moreMenu')&&!e.target.closest('[data-p="more"]'))closeMore()});
+
+// ===== XP =====
+function addXP(n){S.xp+=n;save();renderXP()}
+function renderXP(){
+  const lv=Math.floor(S.xp/100)+1,xpIn=S.xp%100;
+  const names={ar:['مبتدئ','متعلم','مطور','محارب','نجم','محترف','خبير','أسطورة'],
+    en:['Beginner','Learner','Developer','Warrior','Star','Pro','Expert','Legend']};
+  const i=Math.min(lv-1,names.ar.length-1);
+  document.getElementById('xpLvl').textContent=`⭐ Lv.${lv} — ${S.lang==='ar'?names.ar[i]:names.en[i]}`;
+  document.getElementById('xpNum').textContent=`${xpIn}/100 XP`;
+  document.getElementById('xpFill').style.width=xpIn+'%';
 }
 
-function saveState() {
-  state.lastHabitDate = new Date().toDateString();
-  try { localStorage.setItem('bader-life-os', JSON.stringify(state)); } catch(e) {}
+// ===== HABITS =====
+function addHabit(){const inp=document.getElementById('habInp'),v=inp.value.trim();if(!v)return;
+S.habits.push({id:Date.now(),name:v,done:false,streak:0});inp.value='';save();renderHabits();renderOV()}
+function togHabit(id){const h=S.habits.find(x=>x.id===id);if(!h)return;h.done=!h.done;
+if(h.done){h.streak++;addXP(10)}else h.streak=Math.max(0,h.streak-1);save();renderHabits();renderOV()}
+function delHabit(id){S.habits=S.habits.filter(x=>x.id!==id);save();renderHabits();renderOV()}
+function renderHabits(){
+  const el=document.getElementById('habList');
+  if(!S.habits.length){el.innerHTML=`<div class="empty"><div class="empty-i">🔥</div>${S.lang==='ar'?'أضف عادتك الأولى':'Add first habit'}</div>`;
+  document.getElementById('habScore').textContent='0%';return}
+  el.innerHTML=S.habits.map(h=>`<div class="habit ${h.done?'done':''}" onclick="togHabit(${h.id})">
+    <div class="hchk">${h.done?'✓':''}</div><div class="hname">${h.name}</div>
+    <div class="hstreak">🔥${h.streak}</div>
+    <button class="del" onclick="event.stopPropagation();delHabit(${h.id})">×</button></div>`).join('');
+  const d=S.habits.filter(h=>h.done).length;
+  document.getElementById('habScore').textContent=Math.round(d/S.habits.length*100)+'%';
 }
 
-// ==================== MOTIVATION ====================
-const motivations = [
-  { ar: 'بسم الله... يومك الجديد فرصة جديدة 🌟', en: 'Bismillah... A new day, a new opportunity 🌟' },
-  { ar: 'الصبر مفتاح الفرج... أنت أقرب مما تظن 💪', en: 'Patience is the key... You\'re closer than you think 💪' },
-  { ar: '"وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا" — الطلاق:2', en: '"Whoever fears Allah, He will make a way out for them" — 65:2' },
-  { ar: 'كل سطر كود تكتبه يقربك من حلمك 🚀', en: 'Every line of code brings you closer to your dream 🚀' },
-  { ar: 'من ليبيا للعالمية... هذا طريقك يا بدر 🇱🇾', en: 'From Libya to the world... This is your path, Bader 🇱🇾' },
-  { ar: 'الحلال مبارك... استمر على طريق الخير ✨', en: 'Halal earnings are blessed... Keep on the right path ✨' },
-  { ar: '"إِنَّ مَعَ الْعُسْرِ يُسْرًا" — الشرح:6', en: '"With hardship comes ease" — 94:6' },
-  { ar: 'اليوم أفضل من أمس... وغداً أفضل بإذن الله', en: 'Today is better than yesterday... Tomorrow even better, Insha\'Allah' },
-  { ar: 'تعلمك ومثابرتك سلاحك... لا تتوقف 🔥', en: 'Your learning and persistence are your weapons... Don\'t stop 🔥' },
-  { ar: 'ربك يراك وأنت تحارب... الأجر محفوظ 🤲', en: 'Allah sees your struggle... The reward is preserved 🤲' },
+// ===== GOALS =====
+function addGoal(){const inp=document.getElementById('goalInp'),v=inp.value.trim();if(!v)return;
+S.goals.push({id:Date.now(),name:v,prog:0});inp.value='';save();renderGoals();renderOV()}
+function updGoal(id,d){const g=S.goals.find(x=>x.id===id);if(!g)return;
+g.prog=Math.max(0,Math.min(100,g.prog+d));if(g.prog===100)addXP(50);save();renderGoals();renderOV()}
+function delGoal(id){S.goals=S.goals.filter(x=>x.id!==id);save();renderGoals();renderOV()}
+function renderGoals(){
+  const el=document.getElementById('goalList');
+  if(!S.goals.length){el.innerHTML=`<div class="empty"><div class="empty-i">🎯</div>${S.lang==='ar'?'أضف هدفك الأول':'Add first goal'}</div>`;return}
+  el.innerHTML=S.goals.map(g=>`<div class="goal"><div class="goal-top">
+    <div class="goal-nm">${g.name}</div><div style="display:flex;gap:6px;align-items:center">
+    <div class="goal-pct">${g.prog}%</div><button class="del" onclick="delGoal(${g.id})">×</button></div></div>
+    <div class="gbar"><div class="gfill" style="width:${g.prog}%"></div></div>
+    <div class="goal-btns"><button class="btn btn-o btn-s" onclick="updGoal(${g.id},-10)">-10</button>
+    <button class="btn btn-o btn-s" onclick="updGoal(${g.id},10)">+10</button>
+    <button class="btn btn-o btn-s" onclick="updGoal(${g.id},25)">+25</button></div></div>`).join('');
+}
+
+// ===== SKILLS =====
+const skC=['var(--gold)','var(--emerald)','var(--blue)','var(--purple)','var(--cyan)','var(--rose)'];
+function addSkill(){const inp=document.getElementById('skInp'),v=inp.value.trim();if(!v)return;
+S.skills.push({id:Date.now(),name:v,xp:0});inp.value='';save();renderSkills()}
+function addSkXP(id,n){const s=S.skills.find(x=>x.id===id);if(!s)return;s.xp+=n;addXP(n);save();renderSkills()}
+function delSkill(id){S.skills=S.skills.filter(x=>x.id!==id);save();renderSkills()}
+function renderSkills(){
+  const el=document.getElementById('skList');
+  if(!S.skills.length){el.innerHTML=`<div class="empty"><div class="empty-i">⚡</div>${S.lang==='ar'?'أضف مهارة':'Add skill'}</div>`;return}
+  el.innerHTML=S.skills.map((s,i)=>{const lv=Math.floor(s.xp/50)+1,xpIn=s.xp%50,c=skC[i%skC.length];
+  return`<div class="skill"><div class="sk-lv" style="background:${c}18;color:${c}">${lv}</div>
+    <div class="sk-info"><div class="sk-nm">${s.name}</div>
+    <div class="sk-bar"><div class="sk-fl" style="width:${xpIn/50*100}%;background:${c}"></div></div></div>
+    <button class="btn btn-o btn-s" onclick="addSkXP(${s.id},10)">+10</button>
+    <button class="del" onclick="delSkill(${s.id})">×</button></div>`}).join('');
+}
+
+// ===== FINANCE =====
+function addFin(type){const desc=document.getElementById('finDesc').value.trim(),
+amt=parseFloat(document.getElementById('finAmt').value);if(!desc||isNaN(amt)||amt<=0)return;
+S.finance.push({id:Date.now(),desc,amt:type==='income'?amt:-amt,type,date:new Date().toLocaleDateString()});
+document.getElementById('finDesc').value='';document.getElementById('finAmt').value='';save();renderFin()}
+function delFin(id){S.finance=S.finance.filter(x=>x.id!==id);save();renderFin()}
+function renderFin(){
+  const bal=S.finance.reduce((s,f)=>s+f.amt,0);
+  const el=document.getElementById('finBal');
+  el.textContent='$'+bal.toFixed(2);el.style.color=bal>=0?'var(--emerald)':'var(--rose)';
+  const list=document.getElementById('finList');
+  if(!S.finance.length){list.innerHTML=`<div class="empty"><div class="empty-i">💰</div>${S.lang==='ar'?'سجل معاملة':'Add transaction'}</div>`;return}
+  list.innerHTML=[...S.finance].reverse().slice(0,15).map(f=>`<div class="fin-item">
+    <div class="fin-nm">${f.desc}<span style="font-size:10px;color:var(--txt3);margin-right:6px">${f.date}</span></div>
+    <div style="display:flex;gap:6px;align-items:center">
+    <div class="fin-val ${f.type}">${f.amt>0?'+':''}${f.amt.toFixed(2)}</div>
+    <button class="del" onclick="delFin(${f.id})">×</button></div></div>`).join('');
+}
+
+// ===== POMODORO =====
+let pomoInt=null,pomoSec=25*60,pomoOn=false;
+function togglePomo(){
+  if(pomoOn){clearInterval(pomoInt);pomoOn=false;
+  document.querySelector('#pomoBtn span').textContent=S.lang==='ar'?'استمر':'Resume'}
+  else{pomoOn=true;document.querySelector('#pomoBtn span').textContent=S.lang==='ar'?'إيقاف':'Pause';
+  pomoInt=setInterval(()=>{pomoSec--;if(pomoSec<=0){clearInterval(pomoInt);pomoOn=false;
+  S.pomoSess++;S.pomoMin+=25;addXP(25);pomoSec=25*60;
+  document.querySelector('#pomoBtn span').textContent=S.lang==='ar'?'ابدأ':'Start';
+  save();renderOV();alert(S.lang==='ar'?'🎉 أحسنت!':'🎉 Great job!')}renderPomo()},1000)}}
+function resetPomo(){clearInterval(pomoInt);pomoOn=false;pomoSec=25*60;
+document.querySelector('#pomoBtn span').textContent=S.lang==='ar'?'ابدأ':'Start';renderPomo()}
+function renderPomo(){
+  const m=String(Math.floor(pomoSec/60)).padStart(2,'0'),s=String(pomoSec%60).padStart(2,'0');
+  document.getElementById('pomoTime').textContent=m+':'+s;
+  document.getElementById('pomoSess').textContent=S.pomoSess;
+  document.getElementById('pomoMin').textContent=S.pomoMin;
+  const pct=1-(pomoSec/(25*60));
+  document.getElementById('pomoCircle').style.strokeDashoffset=565.48*(1-pct);
+}
+
+// ===== JOURNAL =====
+function addJournal(){const t=document.getElementById('jInp').value.trim();if(!t)return;
+const mood=document.getElementById('jMood').value;
+S.journal.unshift({id:Date.now(),text:t,mood,date:new Date().toLocaleString(S.lang==='ar'?'ar-LY':'en-US')});
+document.getElementById('jInp').value='';addXP(5);save();renderJournal();renderOV()}
+function delJournal(id){S.journal=S.journal.filter(x=>x.id!==id);save();renderJournal();renderOV()}
+function renderJournal(){
+  const el=document.getElementById('jList');
+  if(!S.journal.length){el.innerHTML=`<div class="empty"><div class="empty-i">📝</div>${S.lang==='ar'?'اكتب أول يومية':'Write first entry'}</div>`;return}
+  el.innerHTML=S.journal.map(j=>`<div class="jentry"><div class="jdate"><span>${j.mood} ${j.date}</span>
+    <button class="del" onclick="delJournal(${j.id})">×</button></div>
+    <div class="jtxt">${j.text}</div></div>`).join('');
+}
+
+// ===== AZKAR =====
+const AZ=[
+  {ar:'سبحان الله',en:'SubhanAllah',t:33},{ar:'الحمد لله',en:'Alhamdulillah',t:33},
+  {ar:'الله أكبر',en:'Allahu Akbar',t:34},{ar:'لا إله إلا الله',en:'La ilaha illa Allah',t:100},
+  {ar:'أستغفر الله',en:'Astaghfirullah',t:100},{ar:'لا حول ولا قوة إلا بالله',en:'La hawla wala quwwata illa billah',t:33}
+];
+function cntAz(i){const k='az_'+i;S.azkar[k]=(S.azkar[k]||0)+1;
+if(S.azkar[k]===AZ[i].t)addXP(5);save();renderAzkar();renderOV()}
+function rstAz(i){S.azkar['az_'+i]=0;save();renderAzkar();renderOV()}
+function renderAzkar(){
+  document.getElementById('azList').innerHTML=AZ.map((a,i)=>{const c=S.azkar['az_'+i]||0,done=c>=a.t;
+  return`<div class="azkar-card ${done?'completed':''}"><div class="az-txt">${S.lang==='ar'?a.ar:a.en}</div>
+    <div class="az-counter"><button class="az-btn" onclick="rstAz(${i})">↺</button>
+    <div class="az-val">${c}/${a.t}</div>
+    <button class="az-btn" onclick="cntAz(${i})" style="${done?'background:rgba(52,211,153,0.15);color:var(--emerald);border-color:rgba(52,211,153,0.2)':''}">+</button>
+    </div></div>`}).join('');
+}
+
+// ===== NOTES =====
+function addNote(){const t=document.getElementById('nTitle').value.trim(),
+b=document.getElementById('nBody').value.trim();if(!b)return;
+S.notes.unshift({id:Date.now(),title:t||(S.lang==='ar'?'ملاحظة':'Note'),body:b,
+date:new Date().toLocaleString(S.lang==='ar'?'ar-LY':'en-US')});
+document.getElementById('nTitle').value='';document.getElementById('nBody').value='';
+addXP(3);save();renderNotes()}
+function delNote(id){S.notes=S.notes.filter(x=>x.id!==id);save();renderNotes()}
+function renderNotes(){
+  const el=document.getElementById('nList');
+  if(!S.notes.length){el.innerHTML=`<div class="empty"><div class="empty-i">📌</div>${S.lang==='ar'?'أضف ملاحظة':'Add note'}</div>`;return}
+  el.innerHTML=S.notes.map(n=>`<div class="note"><div style="display:flex;justify-content:space-between;align-items:start">
+    <div class="note-t">${n.title}</div><button class="del" onclick="delNote(${n.id})">×</button></div>
+    <div class="note-b">${n.body}</div><div class="note-m">${n.date}</div></div>`).join('');
+}
+
+// ===== RAMADAN IMSAKIYA =====
+// Approximate times for Tripoli, Libya - Ramadan 2026 (starts ~Feb 18, 2026)
+const RAM_DATA=[
+  {day:1,date:'18 Feb',fajr:'05:23',sunrise:'06:48',dhuhr:'12:28',asr:'15:38',maghrib:'18:08',isha:'19:28'},
+  {day:2,date:'19 Feb',fajr:'05:22',sunrise:'06:47',dhuhr:'12:28',asr:'15:39',maghrib:'18:09',isha:'19:29'},
+  {day:3,date:'20 Feb',fajr:'05:21',sunrise:'06:46',dhuhr:'12:28',asr:'15:39',maghrib:'18:10',isha:'19:30'},
+  {day:4,date:'21 Feb',fajr:'05:20',sunrise:'06:45',dhuhr:'12:28',asr:'15:40',maghrib:'18:11',isha:'19:31'},
+  {day:5,date:'22 Feb',fajr:'05:19',sunrise:'06:44',dhuhr:'12:28',asr:'15:40',maghrib:'18:12',isha:'19:32'},
+  {day:6,date:'23 Feb',fajr:'05:18',sunrise:'06:43',dhuhr:'12:28',asr:'15:41',maghrib:'18:13',isha:'19:33'},
+  {day:7,date:'24 Feb',fajr:'05:17',sunrise:'06:42',dhuhr:'12:28',asr:'15:41',maghrib:'18:14',isha:'19:34'},
+  {day:8,date:'25 Feb',fajr:'05:16',sunrise:'06:41',dhuhr:'12:28',asr:'15:42',maghrib:'18:15',isha:'19:35'},
+  {day:9,date:'26 Feb',fajr:'05:15',sunrise:'06:40',dhuhr:'12:27',asr:'15:42',maghrib:'18:16',isha:'19:36'},
+  {day:10,date:'27 Feb',fajr:'05:14',sunrise:'06:39',dhuhr:'12:27',asr:'15:43',maghrib:'18:17',isha:'19:37'},
+  {day:11,date:'28 Feb',fajr:'05:13',sunrise:'06:38',dhuhr:'12:27',asr:'15:43',maghrib:'18:18',isha:'19:38'},
+  {day:12,date:'1 Mar',fajr:'05:12',sunrise:'06:37',dhuhr:'12:27',asr:'15:44',maghrib:'18:18',isha:'19:38'},
+  {day:13,date:'2 Mar',fajr:'05:11',sunrise:'06:36',dhuhr:'12:27',asr:'15:44',maghrib:'18:19',isha:'19:39'},
+  {day:14,date:'3 Mar',fajr:'05:10',sunrise:'06:35',dhuhr:'12:26',asr:'15:44',maghrib:'18:20',isha:'19:40'},
+  {day:15,date:'4 Mar',fajr:'05:09',sunrise:'06:34',dhuhr:'12:26',asr:'15:45',maghrib:'18:21',isha:'19:41'},
+  {day:16,date:'5 Mar',fajr:'05:08',sunrise:'06:33',dhuhr:'12:26',asr:'15:45',maghrib:'18:22',isha:'19:42'},
+  {day:17,date:'6 Mar',fajr:'05:07',sunrise:'06:32',dhuhr:'12:26',asr:'15:45',maghrib:'18:22',isha:'19:42'},
+  {day:18,date:'7 Mar',fajr:'05:06',sunrise:'06:30',dhuhr:'12:25',asr:'15:46',maghrib:'18:23',isha:'19:43'},
+  {day:19,date:'8 Mar',fajr:'05:05',sunrise:'06:29',dhuhr:'12:25',asr:'15:46',maghrib:'18:24',isha:'19:44'},
+  {day:20,date:'9 Mar',fajr:'05:04',sunrise:'06:28',dhuhr:'12:25',asr:'15:46',maghrib:'18:25',isha:'19:45'},
+  {day:21,date:'10 Mar',fajr:'05:02',sunrise:'06:27',dhuhr:'12:24',asr:'15:47',maghrib:'18:25',isha:'19:45'},
+  {day:22,date:'11 Mar',fajr:'05:01',sunrise:'06:26',dhuhr:'12:24',asr:'15:47',maghrib:'18:26',isha:'19:46'},
+  {day:23,date:'12 Mar',fajr:'05:00',sunrise:'06:24',dhuhr:'12:24',asr:'15:47',maghrib:'18:27',isha:'19:47'},
+  {day:24,date:'13 Mar',fajr:'04:59',sunrise:'06:23',dhuhr:'12:23',asr:'15:47',maghrib:'18:28',isha:'19:48'},
+  {day:25,date:'14 Mar',fajr:'04:57',sunrise:'06:22',dhuhr:'12:23',asr:'15:48',maghrib:'18:28',isha:'19:48'},
+  {day:26,date:'15 Mar',fajr:'04:56',sunrise:'06:21',dhuhr:'12:23',asr:'15:48',maghrib:'18:29',isha:'19:49'},
+  {day:27,date:'16 Mar',fajr:'04:55',sunrise:'06:19',dhuhr:'12:22',asr:'15:48',maghrib:'18:30',isha:'19:50'},
+  {day:28,date:'17 Mar',fajr:'04:53',sunrise:'06:18',dhuhr:'12:22',asr:'15:48',maghrib:'18:30',isha:'19:50'},
+  {day:29,date:'18 Mar',fajr:'04:52',sunrise:'06:17',dhuhr:'12:21',asr:'15:49',maghrib:'18:31',isha:'19:51'},
+  {day:30,date:'19 Mar',fajr:'04:51',sunrise:'06:16',dhuhr:'12:21',asr:'15:49',maghrib:'18:32',isha:'19:52'},
 ];
 
-function nextMotivation() {
-  state.motivationIdx = (state.motivationIdx + 1) % motivations.length;
-  const m = motivations[state.motivationIdx];
-  document.getElementById('motivationText').textContent = state.lang === 'ar' ? m.ar : m.en;
+function getRamadanDay(){
+  const now=new Date();const start=new Date(2026,1,18);// Feb 18, 2026
+  const diff=Math.floor((now-start)/(1000*60*60*24))+1;
+  return diff>=1&&diff<=30?diff:0;
 }
 
-// ==================== CLOCK ====================
-function updateClock() {
-  const now = new Date();
-  const time = now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-  const date = now.toLocaleDateString(state.lang === 'ar' ? 'ar-LY' : 'en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-  document.getElementById('clockDisplay').innerHTML = `<div style="font-size:16px;font-weight:600">${time}</div><div style="font-size:11px">${date}</div>`;
-}
+function renderRamadan(){
+  const today=getRamadanDay();
+  const start=new Date(2026,1,18);
+  const now=new Date();
 
-// ==================== LANGUAGE ====================
-function toggleLang() {
-  state.lang = state.lang === 'ar' ? 'en' : 'ar';
-  document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
-  document.querySelectorAll('[data-ar]').forEach(el => {
-    el.textContent = state.lang === 'ar' ? el.dataset.ar : el.dataset.en;
-  });
-  document.getElementById('headerTitle').textContent = state.lang === 'ar' ? 'لوحة حياة بدر' : "Bader's Life OS";
-  const m = motivations[state.motivationIdx];
-  document.getElementById('motivationText').textContent = state.lang === 'ar' ? m.ar : m.en;
-  saveState();
-  renderAll();
-}
-
-// ==================== TABS ====================
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-  });
-});
-
-// ==================== XP SYSTEM ====================
-function addXP(amount) {
-  state.xp += amount;
-  saveState();
-  updateXP();
-}
-
-function updateXP() {
-  const level = Math.floor(state.xp / 100) + 1;
-  const xpInLevel = state.xp % 100;
-  const levelNames = {
-    ar: ['مبتدئ طموح','متعلم نشط','مطور واعد','محارب رقمي','نجم صاعد','محترف','خبير','أسطورة','قائد','ملهم العالم'],
-    en: ['Ambitious Beginner','Active Learner','Promising Dev','Digital Warrior','Rising Star','Professional','Expert','Legend','Leader','World Inspirer']
-  };
-  const idx = Math.min(level - 1, levelNames.ar.length - 1);
-  const name = state.lang === 'ar' ? levelNames.ar[idx] : levelNames.en[idx];
-  document.getElementById('xpLevel').textContent = `⭐ Level ${level} — ${name}`;
-  document.getElementById('xpNumbers').textContent = `${xpInLevel} / 100 XP`;
-  document.getElementById('xpFill').style.width = xpInLevel + '%';
-  document.getElementById('statXP').textContent = state.xp;
-}
-
-// ==================== HABITS ====================
-function addHabit() {
-  const input = document.getElementById('habitInput');
-  const name = input.value.trim();
-  if (!name) return;
-  state.habits.push({ id: Date.now(), name, completed: false, streak: 0 });
-  input.value = '';
-  saveState(); renderHabits(); updateOverview();
-}
-
-function toggleHabit(id) {
-  const h = state.habits.find(x => x.id === id);
-  if (!h) return;
-  h.completed = !h.completed;
-  if (h.completed) { h.streak++; addXP(10); } else { h.streak = Math.max(0, h.streak - 1); }
-  saveState(); renderHabits(); updateOverview();
-}
-
-function deleteHabit(id) {
-  state.habits = state.habits.filter(x => x.id !== id);
-  saveState(); renderHabits(); updateOverview();
-}
-
-function renderHabits() {
-  const el = document.getElementById('habitsList');
-  if (!state.habits.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🔥</div>${state.lang==='ar'?'أضف عادتك الأولى':'Add your first habit'}</div>`;
-    document.getElementById('habitScore').textContent = '0%';
-    return;
+  // Countdown
+  const cdEl=document.getElementById('ramCountdown');
+  if(now<start){
+    const diff=start-now;
+    const days=Math.floor(diff/(1000*60*60*24));
+    const hrs=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+    const mins=Math.floor((diff%(1000*60*60))/(1000*60));
+    cdEl.innerHTML=`<div class="ram-cd-title">${S.lang==='ar'?'⏳ العد التنازلي لرمضان':'⏳ Countdown to Ramadan'}</div>
+      <div class="ram-cd-time">
+        <div class="ram-cd-unit"><div class="ram-cd-val">${days}</div><div class="ram-cd-lbl">${S.lang==='ar'?'يوم':'Days'}</div></div>
+        <div class="ram-cd-unit"><div class="ram-cd-val">${hrs}</div><div class="ram-cd-lbl">${S.lang==='ar'?'ساعة':'Hrs'}</div></div>
+        <div class="ram-cd-unit"><div class="ram-cd-val">${mins}</div><div class="ram-cd-lbl">${S.lang==='ar'?'دقيقة':'Mins'}</div></div>
+      </div>`;
+  }else if(today>=1&&today<=30){
+    cdEl.innerHTML=`<div class="ram-cd-title">🌙 ${S.lang==='ar'?'رمضان مبارك — اليوم':'Ramadan Mubarak — Day'} ${today}</div>`;
+  }else{
+    cdEl.innerHTML=`<div class="ram-cd-title">${S.lang==='ar'?'انتهى رمضان — تقبل الله طاعاتكم':'Ramadan has ended — May Allah accept your worship'}</div>`;
   }
-  el.innerHTML = state.habits.map(h => `
-    <div class="habit-item ${h.completed?'completed':''}" onclick="toggleHabit(${h.id})">
-      <div class="habit-check">${h.completed?'✓':''}</div>
-      <div class="habit-name">${h.name}</div>
-      <div class="habit-streak">🔥 ${h.streak}</div>
-      <button class="delete-btn" onclick="event.stopPropagation();deleteHabit(${h.id})">×</button>
-    </div>
-  `).join('');
-  const done = state.habits.filter(h=>h.completed).length;
-  const pct = Math.round((done/state.habits.length)*100);
-  document.getElementById('habitScore').textContent = pct + '%';
-}
 
-// ==================== GOALS ====================
-function addGoal() {
-  const input = document.getElementById('goalInput');
-  const name = input.value.trim();
-  if (!name) return;
-  state.goals.push({ id: Date.now(), name, progress: 0 });
-  input.value = '';
-  saveState(); renderGoals(); updateOverview();
-}
-
-function updateGoalProgress(id, delta) {
-  const g = state.goals.find(x => x.id === id);
-  if (!g) return;
-  g.progress = Math.max(0, Math.min(100, g.progress + delta));
-  if (g.progress === 100) addXP(50);
-  saveState(); renderGoals(); updateOverview();
-}
-
-function deleteGoal(id) {
-  state.goals = state.goals.filter(x => x.id !== id);
-  saveState(); renderGoals(); updateOverview();
-}
-
-function renderGoals() {
-  const el = document.getElementById('goalsList');
-  if (!state.goals.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🎯</div>${state.lang==='ar'?'أضف هدفك الأول':'Add your first goal'}</div>`;
-    return;
-  }
-  el.innerHTML = state.goals.map(g => `
-    <div class="goal-item">
-      <div class="goal-top">
-        <div class="goal-name">${g.name}</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="goal-percent">${g.progress}%</div>
-          <button class="delete-btn" onclick="deleteGoal(${g.id})">×</button>
-        </div>
-      </div>
-      <div class="goal-bar"><div class="goal-fill" style="width:${g.progress}%"></div></div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <button class="btn btn-ghost btn-sm" onclick="updateGoalProgress(${g.id},-10)">-10%</button>
-        <button class="btn btn-ghost btn-sm" onclick="updateGoalProgress(${g.id},10)">+10%</button>
-        <button class="btn btn-ghost btn-sm" onclick="updateGoalProgress(${g.id},25)">+25%</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ==================== SKILLS ====================
-const skillColors = ['var(--accent-gold)','var(--accent-emerald)','var(--accent-blue)','var(--accent-purple)','var(--accent-cyan)','var(--accent-rose)'];
-
-function addSkill() {
-  const input = document.getElementById('skillInput');
-  const name = input.value.trim();
-  if (!name) return;
-  state.skills.push({ id: Date.now(), name, xp: 0 });
-  input.value = '';
-  saveState(); renderSkills();
-}
-
-function addSkillXP(id, amount) {
-  const s = state.skills.find(x => x.id === id);
-  if (!s) return;
-  s.xp += amount;
-  addXP(amount);
-  saveState(); renderSkills();
-}
-
-function deleteSkill(id) {
-  state.skills = state.skills.filter(x => x.id !== id);
-  saveState(); renderSkills();
-}
-
-function renderSkills() {
-  const el = document.getElementById('skillsList');
-  if (!state.skills.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">⚡</div>${state.lang==='ar'?'أضف مهارتك الأولى':'Add your first skill'}</div>`;
-    return;
-  }
-  el.innerHTML = state.skills.map((s, i) => {
-    const level = Math.floor(s.xp / 50) + 1;
-    const xpInLvl = s.xp % 50;
-    const color = skillColors[i % skillColors.length];
-    return `
-    <div class="skill-item">
-      <div class="skill-level" style="background:${color}22;color:${color}">${level}</div>
-      <div class="skill-info">
-        <div class="skill-name">${s.name}</div>
-        <div class="skill-xp-bar"><div class="skill-xp-fill" style="width:${(xpInLvl/50)*100}%;background:${color}"></div></div>
-      </div>
-      <button class="btn btn-ghost btn-sm" onclick="addSkillXP(${s.id},10)">+10 XP</button>
-      <button class="delete-btn" onclick="deleteSkill(${s.id})">×</button>
+  // Today's times
+  const tdEl=document.getElementById('ramToday');
+  const d=RAM_DATA[Math.max(0,Math.min(today-1,29))];
+  const lbls={ar:{fajr:'الفجر (إمساك)',sunrise:'الشروق',dhuhr:'الظهر',asr:'العصر',maghrib:'المغرب (إفطار)',isha:'العشاء'},
+    en:{fajr:'Fajr (Imsak)',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',maghrib:'Maghrib (Iftar)',isha:'Isha'}};
+  const L=S.lang==='ar'?lbls.ar:lbls.en;
+  tdEl.innerHTML=`<div class="ram-today-title">🕌 ${S.lang==='ar'?'مواقيت اليوم':'Today\'s Times'}</div>
+    <div class="ram-times">
+      <div class="ram-time-card fajr"><div class="ram-time-lbl">${L.fajr}</div><div class="ram-time-val">${d.fajr}</div></div>
+      <div class="ram-time-card sunrise"><div class="ram-time-lbl">${L.sunrise}</div><div class="ram-time-val">${d.sunrise}</div></div>
+      <div class="ram-time-card dhuhr"><div class="ram-time-lbl">${L.dhuhr}</div><div class="ram-time-val">${d.dhuhr}</div></div>
+      <div class="ram-time-card asr"><div class="ram-time-lbl">${L.asr}</div><div class="ram-time-val">${d.asr}</div></div>
+      <div class="ram-time-card maghrib"><div class="ram-time-lbl">${L.maghrib}</div><div class="ram-time-val">${d.maghrib}</div></div>
+      <div class="ram-time-card isha"><div class="ram-time-lbl">${L.isha}</div><div class="ram-time-val">${d.isha}</div></div>
     </div>`;
-  }).join('');
+
+  // Monthly list
+  const dEl=document.getElementById('ramDays');
+  dEl.innerHTML=`<div style="display:flex;justify-content:space-between;padding:8px 12px;font-size:11px;color:var(--txt3);border-bottom:1px solid var(--border)">
+    <span style="width:30px">#</span><span style="flex:1;text-align:center">${S.lang==='ar'?'التاريخ':'Date'}</span>
+    <span style="width:60px;text-align:center" class="ram-imsak">${S.lang==='ar'?'إمساك':'Imsak'}</span>
+    <span style="width:60px;text-align:center" class="ram-iftar">${S.lang==='ar'?'إفطار':'Iftar'}</span></div>`+
+    RAM_DATA.map(r=>`<div class="ram-day ${r.day===today?'today':''}">
+      <span class="ram-day-num">${r.day}</span>
+      <span class="ram-day-date">${r.date}</span>
+      <span class="ram-day-times"><span class="ram-imsak">${r.fajr}</span></span>
+      <span class="ram-day-times"><span class="ram-iftar">${r.maghrib}</span></span>
+    </div>`).join('');
 }
 
-// ==================== FINANCE ====================
-function addFinance(type) {
-  const desc = document.getElementById('financeDesc').value.trim();
-  const amount = parseFloat(document.getElementById('financeAmount').value);
-  if (!desc || isNaN(amount) || amount <= 0) return;
-  state.finance.push({ id: Date.now(), desc, amount: type==='income'?amount:-amount, type, date: new Date().toLocaleDateString() });
-  document.getElementById('financeDesc').value = '';
-  document.getElementById('financeAmount').value = '';
-  saveState(); renderFinance();
+// ===== OVERVIEW =====
+function renderOV(){
+  const hd=S.habits.filter(h=>h.done).length;
+  const az=Object.values(S.azkar).reduce((s,v)=>s+v,0);
+  document.getElementById('overStats').innerHTML=
+    `<div class="stat c1"><div class="si">🔥</div><div class="sv">${hd}/${S.habits.length}</div><div class="sl" data-ar="عادات" data-en="Habits">${S.lang==='ar'?'عادات':'Habits'}</div></div>
+     <div class="stat c2"><div class="si">🎯</div><div class="sv">${S.goals.length}</div><div class="sl" data-ar="أهداف" data-en="Goals">${S.lang==='ar'?'أهداف':'Goals'}</div></div>
+     <div class="stat c3"><div class="si">⏱️</div><div class="sv">${S.pomoSess}</div><div class="sl" data-ar="تركيز" data-en="Focus">${S.lang==='ar'?'تركيز':'Focus'}</div></div>
+     <div class="stat c4"><div class="si">⚡</div><div class="sv">${S.xp}</div><div class="sl">XP</div></div>
+     <div class="stat c5"><div class="si">📝</div><div class="sv">${S.journal.length}</div><div class="sl" data-ar="يوميات" data-en="Journal">${S.lang==='ar'?'يوميات':'Journal'}</div></div>
+     <div class="stat c6"><div class="si">🤲</div><div class="sv">${az}</div><div class="sl" data-ar="أذكار" data-en="Azkar">${S.lang==='ar'?'أذكار':'Azkar'}</div></div>`;
+
+  const oh=document.getElementById('ovHabits');
+  oh.innerHTML=S.habits.length?S.habits.slice(0,4).map(h=>`<div class="habit ${h.done?'done':''}" onclick="togHabit(${h.id})" style="margin-bottom:6px">
+    <div class="hchk">${h.done?'✓':''}</div><div class="hname">${h.name}</div></div>`).join('')
+    :`<div class="empty" style="padding:16px"><div class="empty-i">🔥</div></div>`;
+
+  const og=document.getElementById('ovGoals');
+  og.innerHTML=S.goals.length?S.goals.slice(0,3).map(g=>`<div style="margin-bottom:8px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+    <span style="font-size:12px">${g.name}</span><span class="goal-pct" style="font-size:11px">${g.prog}%</span></div>
+    <div class="gbar"><div class="gfill" style="width:${g.prog}%"></div></div></div>`).join('')
+    :`<div class="empty" style="padding:16px"><div class="empty-i">🎯</div></div>`;
 }
 
-function deleteFinance(id) {
-  state.finance = state.finance.filter(x => x.id !== id);
-  saveState(); renderFinance();
-}
+// ===== RENDER ALL =====
+function renderAll(){renderHabits();renderGoals();renderSkills();renderFin();renderPomo();
+renderJournal();renderAzkar();renderNotes();renderXP();renderOV();renderRamadan()}
 
-function renderFinance() {
-  const balance = state.finance.reduce((sum, f) => sum + f.amount, 0);
-  document.getElementById('financeBalance').textContent = `$${balance.toFixed(2)}`;
-  document.getElementById('financeBalance').style.color = balance >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)';
-  const el = document.getElementById('financeList');
-  if (!state.finance.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">💰</div>${state.lang==='ar'?'سجل أول معاملة':'Add first transaction'}</div>`;
-    return;
-  }
-  el.innerHTML = [...state.finance].reverse().slice(0, 20).map(f => `
-    <div class="finance-item">
-      <div class="finance-item-name">${f.desc} <span style="font-size:11px;color:var(--text-muted)">${f.date}</span></div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <div class="finance-item-amount ${f.type}">${f.amount > 0 ? '+' : ''}${f.amount.toFixed(2)}</div>
-        <button class="delete-btn" onclick="deleteFinance(${f.id})">×</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ==================== POMODORO ====================
-let pomoInterval = null;
-let pomoSeconds = 25 * 60;
-let pomoRunning = false;
-
-function togglePomo() {
-  if (pomoRunning) {
-    clearInterval(pomoInterval);
-    pomoRunning = false;
-    document.querySelector('#pomoStartBtn span').textContent = state.lang === 'ar' ? 'استمر' : 'Resume';
-  } else {
-    pomoRunning = true;
-    document.querySelector('#pomoStartBtn span').textContent = state.lang === 'ar' ? 'إيقاف' : 'Pause';
-    pomoInterval = setInterval(() => {
-      pomoSeconds--;
-      if (pomoSeconds <= 0) {
-        clearInterval(pomoInterval);
-        pomoRunning = false;
-        state.pomoSessions++;
-        state.pomoTotalMin += 25;
-        addXP(25);
-        pomoSeconds = 25 * 60;
-        document.querySelector('#pomoStartBtn span').textContent = state.lang === 'ar' ? 'ابدأ' : 'Start';
-        saveState();
-        updateOverview();
-        try { new Audio('data:audio/wav;base64,UklGRl9vT19teledata').play(); } catch(e){}
-        alert(state.lang === 'ar' ? '🎉 أحسنت! أكملت جلسة تركيز' : '🎉 Great job! Focus session complete');
-      }
-      renderPomoTime();
-    }, 1000);
-  }
-}
-
-function resetPomo() {
-  clearInterval(pomoInterval);
-  pomoRunning = false;
-  pomoSeconds = 25 * 60;
-  document.querySelector('#pomoStartBtn span').textContent = state.lang === 'ar' ? 'ابدأ' : 'Start';
-  renderPomoTime();
-}
-
-function renderPomoTime() {
-  const m = Math.floor(pomoSeconds / 60).toString().padStart(2, '0');
-  const s = (pomoSeconds % 60).toString().padStart(2, '0');
-  document.getElementById('pomoTime').textContent = `${m}:${s}`;
-  document.getElementById('pomoSessions').textContent = state.pomoSessions;
-  document.getElementById('pomoTotalMin').textContent = state.pomoTotalMin;
-}
-
-// ==================== JOURNAL ====================
-function addJournal() {
-  const text = document.getElementById('journalInput').value.trim();
-  if (!text) return;
-  const mood = document.getElementById('journalMood').value;
-  state.journal.unshift({
-    id: Date.now(), text, mood,
-    date: new Date().toLocaleString(state.lang === 'ar' ? 'ar-LY' : 'en-US')
-  });
-  document.getElementById('journalInput').value = '';
-  addXP(5);
-  saveState(); renderJournal(); updateOverview();
-}
-
-function deleteJournal(id) {
-  state.journal = state.journal.filter(x => x.id !== id);
-  saveState(); renderJournal(); updateOverview();
-}
-
-function renderJournal() {
-  const el = document.getElementById('journalList');
-  if (!state.journal.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📝</div>${state.lang==='ar'?'اكتب أول يومية':'Write your first entry'}</div>`;
-    return;
-  }
-  el.innerHTML = state.journal.map(j => `
-    <div class="journal-entry">
-      <div class="journal-date">${j.mood} ${j.date} <button class="delete-btn" style="display:inline;vertical-align:middle" onclick="deleteJournal(${j.id})">×</button></div>
-      <div class="journal-text">${j.text}</div>
-    </div>
-  `).join('');
-}
-
-// ==================== AZKAR ====================
-const azkarData = [
-  { ar: 'سبحان الله', en: 'SubhanAllah', target: 33 },
-  { ar: 'الحمد لله', en: 'Alhamdulillah', target: 33 },
-  { ar: 'الله أكبر', en: 'Allahu Akbar', target: 34 },
-  { ar: 'لا إله إلا الله', en: 'La ilaha illa Allah', target: 100 },
-  { ar: 'أستغفر الله', en: 'Astaghfirullah', target: 100 },
-  { ar: 'لا حول ولا قوة إلا بالله', en: 'La hawla wala quwwata illa billah', target: 33 },
-];
-
-function countAzkar(idx) {
-  const key = 'azkar_' + idx;
-  state.azkarCounts[key] = (state.azkarCounts[key] || 0) + 1;
-  if (state.azkarCounts[key] === azkarData[idx].target) addXP(5);
-  saveState(); renderAzkar(); updateOverview();
-}
-
-function resetAzkar(idx) {
-  state.azkarCounts['azkar_' + idx] = 0;
-  saveState(); renderAzkar(); updateOverview();
-}
-
-function renderAzkar() {
-  const el = document.getElementById('azkarList');
-  el.innerHTML = azkarData.map((a, i) => {
-    const count = state.azkarCounts['azkar_' + i] || 0;
-    const done = count >= a.target;
-    return `
-    <div class="dua-card" style="${done?'border-color:rgba(16,185,129,0.3);background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.03))':''}">
-      <div class="dua-text">${state.lang==='ar'?a.ar:a.en}</div>
-      <div class="dua-counter">
-        <button class="counter-btn" onclick="resetAzkar(${i})">↺</button>
-        <div class="counter-val">${count} / ${a.target}</div>
-        <button class="counter-btn" onclick="countAzkar(${i})" style="font-size:24px;${done?'background:rgba(16,185,129,0.2);color:var(--accent-emerald)':''}">+</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ==================== NOTES ====================
-function addNote() {
-  const title = document.getElementById('noteTitle').value.trim();
-  const body = document.getElementById('noteBody').value.trim();
-  if (!body) return;
-  state.notes.unshift({
-    id: Date.now(), title: title || (state.lang==='ar'?'ملاحظة':'Note'),
-    body, date: new Date().toLocaleString(state.lang==='ar'?'ar-LY':'en-US')
-  });
-  document.getElementById('noteTitle').value = '';
-  document.getElementById('noteBody').value = '';
-  addXP(3);
-  saveState(); renderNotes();
-}
-
-function deleteNote(id) {
-  state.notes = state.notes.filter(x => x.id !== id);
-  saveState(); renderNotes();
-}
-
-function renderNotes() {
-  const el = document.getElementById('notesList');
-  if (!state.notes.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📌</div>${state.lang==='ar'?'أضف أول ملاحظة':'Add your first note'}</div>`;
-    return;
-  }
-  el.innerHTML = state.notes.map(n => `
-    <div class="note-card">
-      <div style="display:flex;justify-content:space-between;align-items:start">
-        <div class="note-title">${n.title}</div>
-        <button class="delete-btn" onclick="deleteNote(${n.id})">×</button>
-      </div>
-      <div class="note-body">${n.body}</div>
-      <div class="note-meta">${n.date}</div>
-    </div>
-  `).join('');
-}
-
-// ==================== OVERVIEW ====================
-function updateOverview() {
-  const habitsDone = state.habits.filter(h=>h.completed).length;
-  document.getElementById('statHabits').textContent = `${habitsDone}/${state.habits.length}`;
-  document.getElementById('statGoals').textContent = state.goals.length;
-  document.getElementById('statPomo').textContent = state.pomoSessions;
-  document.getElementById('statJournal').textContent = state.journal.length;
-  const totalAzkar = Object.values(state.azkarCounts).reduce((s,v)=>s+v, 0);
-  document.getElementById('statAzkar').textContent = totalAzkar;
-
-  // Overview habits preview
-  const ohEl = document.getElementById('overviewHabits');
-  if (state.habits.length) {
-    ohEl.innerHTML = state.habits.slice(0,5).map(h => `
-      <div class="habit-item ${h.completed?'completed':''}" onclick="toggleHabit(${h.id})" style="margin-bottom:6px">
-        <div class="habit-check">${h.completed?'✓':''}</div>
-        <div class="habit-name">${h.name}</div>
-      </div>
-    `).join('');
-  }
-
-  // Overview goals preview
-  const ogEl = document.getElementById('overviewGoals');
-  if (state.goals.length) {
-    ogEl.innerHTML = state.goals.slice(0,4).map(g => `
-      <div style="margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-          <span style="font-size:13px">${g.name}</span>
-          <span style="font-family:'JetBrains Mono';font-size:12px;color:var(--accent-gold)">${g.progress}%</span>
-        </div>
-        <div class="goal-bar"><div class="goal-fill" style="width:${g.progress}%"></div></div>
-      </div>
-    `).join('');
-  }
-}
-
-// ==================== STARS ====================
-function createStars() {
-  const container = document.getElementById('stars');
-  for (let i = 0; i < 60; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.style.left = Math.random() * 100 + '%';
-    star.style.top = Math.random() * 100 + '%';
-    star.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
-    star.style.animationDelay = Math.random() * 3 + 's';
-    if (Math.random() > 0.7) { star.style.width = '3px'; star.style.height = '3px'; }
-    container.appendChild(star);
-  }
-}
-
-// ==================== INIT ====================
-function renderAll() {
-  renderHabits(); renderGoals(); renderSkills();
-  renderFinance(); renderPomoTime(); renderJournal();
-  renderAzkar(); renderNotes(); updateXP(); updateOverview();
-}
-
-loadState();
-createStars();
-renderAll();
-updateClock();
-setInterval(updateClock, 1000);
-
-// Welcome message on first visit
-if (!localStorage.getItem('bader-life-os-welcomed')) {
-  localStorage.setItem('bader-life-os-welcomed', 'true');
-  setTimeout(() => {
-    alert('🌟 أهلاً بدر! مرحباً في لوحة حياتك\nWelcome to your Life OS!\n\nهنا تقدر تتابع عاداتك، أهدافك، مهاراتك، مصاريفك، أذكارك وأكثر.\nEverything you need to level up your life!');
-  }, 500);
-}
+// ===== INIT =====
+load();renderAll();tick();setInterval(tick,30000);
+// Update Ramadan countdown every minute
+setInterval(renderRamadan,60000);
 </script>
 
 </body>
