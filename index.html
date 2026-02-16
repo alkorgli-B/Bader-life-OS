@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bader's Life OS | لوحة حياة بدر</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a0e1a;
+  --bg-card: #111827;
+  --bg-card-hover: #1a2237;
+  --bg-elevated: #1e293b;
+  --accent-gold: #f59e0b;
+  --accent-gold-dim: #b45309;
+  --accent-emerald: #10b981;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-rose: #f43f5e;
+  --accent-cyan: #06b6d4;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: rgba(255,255,255,0.06);
+  --border-active: rgba(245,158,11,0.4);
+  --glow-gold: 0 0 30px rgba(245,158,11,0.15);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+- { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+font-family: ‘Cairo’, ‘Outfit’, sans-serif;
+background: var(–bg-deep);
+color: var(–text-primary);
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* Ambient Background */
+.ambient-bg {
+position: fixed; inset: 0; z-index: 0; pointer-events: none;
+background:
+radial-gradient(ellipse 800px 600px at 20% 20%, rgba(245,158,11,0.06), transparent),
+radial-gradient(ellipse 600px 500px at 80% 80%, rgba(59,130,246,0.05), transparent),
+radial-gradient(ellipse 500px 400px at 50% 50%, rgba(139,92,246,0.03), transparent);
+}
+
+/* Stars effect */
+.stars {
+position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+.star {
+position: absolute;
+width: 2px; height: 2px;
+background: rgba(255,255,255,0.4);
+border-radius: 50%;
+animation: twinkle var(–dur) ease-in-out infinite alternate;
+}
+@keyframes twinkle { 0%{opacity:0.2;transform:scale(0.8)} 100%{opacity:1;transform:scale(1.2)} }
+
+/* Layout */
+.app-container {
+position: relative; z-index: 1;
+max-width: 1400px; margin: 0 auto; padding: 20px;
+min-height: 100vh;
+}
+
+/* Header */
+.header {
+display: flex; align-items: center; justify-content: space-between;
+padding: 24px 0; margin-bottom: 24px;
+border-bottom: 1px solid var(–border);
+}
+.header-right {
+display: flex; align-items: center; gap: 16px;
+}
+.logo-icon {
+width: 48px; height: 48px;
+background: linear-gradient(135deg, var(–accent-gold), var(–accent-gold-dim));
+border-radius: 14px;
+display: flex; align-items: center; justify-content: center;
+font-size: 24px; font-weight: 800;
+font-family: ‘Outfit’;
+box-shadow: var(–glow-gold);
+animation: logoPulse 3s ease-in-out infinite;
+}
+@keyframes logoPulse {
+0%,100%{box-shadow: 0 0 20px rgba(245,158,11,0.15)}
+50%{box-shadow: 0 0 40px rgba(245,158,11,0.3)}
+}
+.header-title h1 {
+font-size: 22px; font-weight: 700;
+background: linear-gradient(135deg, var(–accent-gold), #fbbf24);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.header-subtitle { font-size: 13px; color: var(–text-muted); font-family:‘Outfit’; }
+
+.header-left { display: flex; align-items: center; gap: 12px; }
+.greeting-time {
+text-align: left; direction: ltr;
+font-family: ‘JetBrains Mono’; font-size: 13px; color: var(–text-secondary);
+}
+.lang-toggle {
+background: var(–bg-card); border: 1px solid var(–border);
+color: var(–text-secondary); padding: 8px 14px;
+border-radius: var(–radius-sm); cursor: pointer;
+font-family: ‘Cairo’; font-size: 13px; transition: all 0.3s;
+}
+.lang-toggle:hover { border-color: var(–accent-gold); color: var(–accent-gold); }
+
+/* Motivation Banner */
+.motivation-banner {
+background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(59,130,246,0.06));
+border: 1px solid rgba(245,158,11,0.15);
+border-radius: var(–radius);
+padding: 20px 28px; margin-bottom: 24px;
+display: flex; align-items: center; justify-content: space-between;
+cursor: pointer; transition: all 0.4s;
+position: relative; overflow: hidden;
+}
+.motivation-banner::before {
+content: ‘’; position: absolute; inset: 0;
+background: linear-gradient(90deg, transparent, rgba(245,158,11,0.05), transparent);
+animation: shimmer 3s infinite;
+}
+@keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+.motivation-banner:hover { border-color: rgba(245,158,11,0.35); transform: translateY(-1px); }
+.motivation-text {
+font-size: 16px; font-weight: 600; position: relative; z-index: 1;
+line-height: 1.7;
+}
+.motivation-icon { font-size: 32px; position: relative; z-index: 1; }
+
+/* Tab Navigation */
+.tab-nav {
+display: flex; gap: 6px; margin-bottom: 24px;
+background: var(–bg-card); border-radius: var(–radius);
+padding: 6px; border: 1px solid var(–border);
+overflow-x: auto; scrollbar-width: none;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+flex: 1; min-width: max-content;
+padding: 12px 18px; border: none; border-radius: var(–radius-sm);
+background: transparent; color: var(–text-muted);
+font-family: ‘Cairo’; font-size: 14px; font-weight: 600;
+cursor: pointer; transition: all 0.3s;
+display: flex; align-items: center; gap: 8px; justify-content: center;
+white-space: nowrap;
+}
+.tab-btn:hover { color: var(–text-secondary); background: rgba(255,255,255,0.03); }
+.tab-btn.active {
+background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.08));
+color: var(–accent-gold); box-shadow: 0 2px 10px rgba(245,158,11,0.1);
+}
+.tab-icon { font-size: 18px; }
+
+/* Tab Content */
+.tab-content { display: none; animation: fadeUp 0.4s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* Card Styles */
+.card {
+background: var(–bg-card);
+border: 1px solid var(–border);
+border-radius: var(–radius);
+padding: 24px; margin-bottom: 16px;
+transition: all 0.3s;
+}
+.card:hover { border-color: rgba(255,255,255,0.1); background: var(–bg-card-hover); }
+.card-header {
+display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 16px;
+}
+.card-title {
+font-size: 16px; font-weight: 700;
+display: flex; align-items: center; gap: 10px;
+}
+.card-badge {
+font-size: 11px; padding: 3px 10px;
+border-radius: 20px; font-weight: 600;
+font-family: ‘JetBrains Mono’;
+}
+
+/* Grid Layouts */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+/* Stat Cards */
+.stat-card {
+background: var(–bg-card); border: 1px solid var(–border);
+border-radius: var(–radius); padding: 20px;
+text-align: center; transition: all 0.3s;
+position: relative; overflow: hidden;
+}
+.stat-card::after {
+content: ‘’; position: absolute; top: 0; left: 0; right: 0;
+height: 3px; border-radius: 3px 3px 0 0;
+}
+.stat-card.gold::after { background: var(–accent-gold); }
+.stat-card.emerald::after { background: var(–accent-emerald); }
+.stat-card.blue::after { background: var(–accent-blue); }
+.stat-card.purple::after { background: var(–accent-purple); }
+.stat-card.rose::after { background: var(–accent-rose); }
+.stat-card.cyan::after { background: var(–accent-cyan); }
+.stat-icon { font-size: 28px; margin-bottom: 8px; }
+.stat-value {
+font-size: 28px; font-weight: 800;
+font-family: ‘Outfit’; margin-bottom: 4px;
+}
+.stat-label { font-size: 12px; color: var(–text-muted); }
+
+/* Habits */
+.habit-item {
+display: flex; align-items: center; gap: 14px;
+padding: 14px 16px; border-radius: var(–radius-sm);
+border: 1px solid var(–border); margin-bottom: 8px;
+cursor: pointer; transition: all 0.3s;
+}
+.habit-item:hover { border-color: rgba(255,255,255,0.1); }
+.habit-item.completed { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); }
+.habit-check {
+width: 28px; height: 28px; border-radius: 8px;
+border: 2px solid var(–text-muted);
+display: flex; align-items: center; justify-content: center;
+font-size: 14px; transition: all 0.3s; flex-shrink: 0;
+}
+.habit-item.completed .habit-check {
+background: var(–accent-emerald); border-color: var(–accent-emerald); color: white;
+}
+.habit-name { flex: 1; font-size: 14px; font-weight: 500; }
+.habit-streak {
+font-family: ‘JetBrains Mono’; font-size: 12px;
+color: var(–accent-gold); background: rgba(245,158,11,0.1);
+padding: 3px 10px; border-radius: 20px;
+}
+
+/* Goals */
+.goal-item {
+padding: 18px; border-radius: var(–radius-sm);
+border: 1px solid var(–border); margin-bottom: 12px;
+transition: all 0.3s;
+}
+.goal-item:hover { border-color: rgba(255,255,255,0.1); }
+.goal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.goal-name { font-size: 15px; font-weight: 600; }
+.goal-percent { font-family: ‘JetBrains Mono’; font-size: 13px; color: var(–accent-gold); }
+.goal-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.goal-fill {
+height: 100%; border-radius: 3px;
+background: linear-gradient(90deg, var(–accent-gold), var(–accent-emerald));
+transition: width 1s ease;
+}
+
+/* Journal */
+.journal-entry {
+padding: 18px; border-radius: var(–radius-sm);
+border: 1px solid var(–border); margin-bottom: 10px;
+}
+.journal-date { font-family:‘JetBrains Mono’; font-size:12px; color:var(–text-muted); margin-bottom:6px; }
+.journal-text { font-size:14px; line-height:1.8; color:var(–text-secondary); }
+
+/* Input Styles */
+.input-row { display: flex; gap: 10px; margin-top: 12px; }
+.text-input {
+flex: 1; padding: 12px 16px;
+background: var(–bg-elevated); border: 1px solid var(–border);
+border-radius: var(–radius-sm); color: var(–text-primary);
+font-family: ‘Cairo’; font-size: 14px; outline: none;
+transition: border-color 0.3s;
+}
+.text-input:focus { border-color: var(–accent-gold); }
+.text-input::placeholder { color: var(–text-muted); }
+textarea.text-input { min-height: 80px; resize: vertical; }
+.btn {
+padding: 12px 20px; border: none; border-radius: var(–radius-sm);
+font-family: ‘Cairo’; font-size: 14px; font-weight: 600;
+cursor: pointer; transition: all 0.3s;
+}
+.btn-gold {
+background: linear-gradient(135deg, var(–accent-gold), var(–accent-gold-dim));
+color: #000;
+}
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(245,158,11,0.3); }
+.btn-ghost {
+background: transparent; border: 1px solid var(–border);
+color: var(–text-secondary);
+}
+.btn-ghost:hover { border-color: var(–text-muted); }
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-danger { background: rgba(244,63,94,0.15); color: var(–accent-rose); border: 1px solid rgba(244,63,94,0.2); }
+
+/* Pomodoro */
+.pomodoro-display {
+text-align: center; padding: 40px 20px;
+}
+.pomodoro-time {
+font-family: ‘JetBrains Mono’; font-size: 72px; font-weight: 700;
+color: var(–text-primary); margin-bottom: 8px;
+letter-spacing: 4px;
+}
+.pomodoro-label { font-size: 14px; color: var(–text-muted); margin-bottom: 24px; }
+.pomodoro-controls { display: flex; gap: 12px; justify-content: center; }
+.pomodoro-stats { display: flex; gap: 20px; justify-content: center; margin-top: 24px; }
+.pomo-stat { text-align: center; }
+.pomo-stat-val { font-family:‘JetBrains Mono’; font-size:20px; font-weight:700; color:var(–accent-gold); }
+.pomo-stat-lbl { font-size:12px; color:var(–text-muted); }
+
+/* Skill tree */
+.skill-item {
+display: flex; align-items: center; gap: 14px;
+padding: 14px 16px; border: 1px solid var(–border);
+border-radius: var(–radius-sm); margin-bottom: 8px;
+}
+.skill-level {
+width: 36px; height: 36px; border-radius: 10px;
+display: flex; align-items: center; justify-content: center;
+font-family: ‘Outfit’; font-weight: 700; font-size: 16px;
+flex-shrink: 0;
+}
+.skill-info { flex: 1; }
+.skill-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.skill-xp-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; }
+.skill-xp-fill { height: 100%; border-radius: 2px; transition: width 0.8s; }
+
+/* Finance */
+.finance-total {
+text-align: center; padding: 20px;
+border-bottom: 1px solid var(–border); margin-bottom: 16px;
+}
+.finance-amount {
+font-family: ‘JetBrains Mono’; font-size: 36px; font-weight: 700;
+direction: ltr;
+}
+.finance-item {
+display: flex; align-items: center; justify-content: space-between;
+padding: 12px 16px; border-radius: var(–radius-sm);
+border: 1px solid var(–border); margin-bottom: 6px;
+}
+.finance-item-name { font-size: 14px; }
+.finance-item-amount {
+font-family: ‘JetBrains Mono’; font-size: 14px; font-weight: 600; direction: ltr;
+}
+.income { color: var(–accent-emerald); }
+.expense { color: var(–accent-rose); }
+
+/* Dua / Azkar */
+.dua-card {
+background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(59,130,246,0.05));
+border: 1px solid rgba(139,92,246,0.15);
+border-radius: var(–radius); padding: 24px;
+text-align: center; margin-bottom: 12px;
+}
+.dua-text {
+font-size: 20px; line-height: 2; font-weight: 600;
+margin-bottom: 12px;
+}
+.dua-counter {
+display: flex; align-items: center; justify-content: center; gap: 16px;
+}
+.counter-btn {
+width: 44px; height: 44px; border-radius: 12px;
+background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.25);
+color: var(–accent-purple); font-size: 20px;
+cursor: pointer; transition: all 0.3s;
+display: flex; align-items: center; justify-content: center;
+}
+.counter-btn:hover { background: rgba(139,92,246,0.25); }
+.counter-val {
+font-family: ‘JetBrains Mono’; font-size: 28px; font-weight: 700;
+color: var(–accent-purple); min-width: 60px;
+}
+
+/* Notes */
+.note-card {
+padding: 16px; border: 1px solid var(–border);
+border-radius: var(–radius-sm); margin-bottom: 8px;
+border-right: 3px solid var(–accent-blue);
+}
+.note-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.note-body { font-size: 13px; color: var(–text-secondary); line-height: 1.7; }
+.note-meta { font-size:11px; color:var(–text-muted); margin-top:8px; font-family:‘JetBrains Mono’; }
+
+/* XP Bar at top */
+.xp-bar-container {
+margin-bottom: 24px;
+}
+.xp-header { display:flex; justify-content:space-between; margin-bottom:8px; }
+.xp-level { font-family:‘Outfit’; font-weight:700; font-size:14px; color:var(–accent-gold); }
+.xp-numbers { font-family:‘JetBrains Mono’; font-size:12px; color:var(–text-muted); }
+.xp-track { height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+.xp-fill {
+height:100%; border-radius:4px;
+background: linear-gradient(90deg, var(–accent-gold), #fbbf24, var(–accent-emerald));
+transition: width 1s ease; position:relative;
+}
+.xp-fill::after {
+content:’’; position:absolute; inset:0;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+animation: shimmer 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+.grid-2, .grid-3 { grid-template-columns: 1fr; }
+.header { flex-direction: column; gap: 12px; text-align: center; }
+.header-right, .header-left { justify-content: center; }
+.pomodoro-time { font-size: 48px; }
+.motivation-banner { flex-direction: column; text-align: center; gap: 12px; }
+.app-container { padding: 12px; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+/* Delete btn */
+.delete-btn {
+width: 28px; height: 28px; border-radius: 6px;
+background: transparent; border: none;
+color: var(–text-muted); cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+font-size: 14px; transition: all 0.2s; flex-shrink: 0;
+}
+.delete-btn:hover { color: var(–accent-rose); background: rgba(244,63,94,0.1); }
+
+.empty-state {
+text-align: center; padding: 40px 20px;
+color: var(–text-muted); font-size: 14px;
+}
+.empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+</style>
+
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="ambient-bg"></div>
+
+<div class="app-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-right">
+      <div class="logo-icon">B</div>
+      <div class="header-title">
+        <h1 id="headerTitle">لوحة حياة بدر</h1>
+        <div class="header-subtitle" id="headerSub">Bader's Life OS — Your Command Center</div>
+      </div>
+    </div>
+    <div class="header-left">
+      <div class="greeting-time" id="clockDisplay"></div>
+      <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN / ع</button>
+    </div>
+  </header>
+
+  <!-- XP Bar -->
+
+  <div class="xp-bar-container">
+    <div class="xp-header">
+      <span class="xp-level" id="xpLevel">⭐ Level 1 — مبتدئ طموح</span>
+      <span class="xp-numbers" id="xpNumbers">0 / 100 XP</span>
+    </div>
+    <div class="xp-track">
+      <div class="xp-fill" id="xpFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Motivation -->
+
+  <div class="motivation-banner" onclick="nextMotivation()">
+    <div class="motivation-text" id="motivationText">بسم الله... يومك الجديد فرصة جديدة 🌟</div>
+    <div class="motivation-icon">✨</div>
+  </div>
+
+  <!-- Tabs -->
+
+  <nav class="tab-nav" id="tabNav">
+    <button class="tab-btn active" data-tab="overview">
+      <span class="tab-icon">📊</span><span class="tab-text" data-ar="نظرة عامة" data-en="Overview">نظرة عامة</span>
+    </button>
+    <button class="tab-btn" data-tab="habits">
+      <span class="tab-icon">🔥</span><span class="tab-text" data-ar="العادات" data-en="Habits">العادات</span>
+    </button>
+    <button class="tab-btn" data-tab="goals">
+      <span class="tab-icon">🎯</span><span class="tab-text" data-ar="الأهداف" data-en="Goals">الأهداف</span>
+    </button>
+    <button class="tab-btn" data-tab="skills">
+      <span class="tab-icon">⚡</span><span class="tab-text" data-ar="المهارات" data-en="Skills">المهارات</span>
+    </button>
+    <button class="tab-btn" data-tab="finance">
+      <span class="tab-icon">💰</span><span class="tab-text" data-ar="المالية" data-en="Finance">المالية</span>
+    </button>
+    <button class="tab-btn" data-tab="pomodoro">
+      <span class="tab-icon">⏱️</span><span class="tab-text" data-ar="بومودورو" data-en="Pomodoro">بومودورو</span>
+    </button>
+    <button class="tab-btn" data-tab="journal">
+      <span class="tab-icon">📝</span><span class="tab-text" data-ar="اليوميات" data-en="Journal">اليوميات</span>
+    </button>
+    <button class="tab-btn" data-tab="azkar">
+      <span class="tab-icon">🤲</span><span class="tab-text" data-ar="أذكار" data-en="Azkar">أذكار</span>
+    </button>
+    <button class="tab-btn" data-tab="notes">
+      <span class="tab-icon">📌</span><span class="tab-text" data-ar="ملاحظات" data-en="Notes">ملاحظات</span>
+    </button>
+  </nav>
+
+  <!-- ============ OVERVIEW ============ -->
+
+  <div class="tab-content active" id="tab-overview">
+    <div class="grid-3" id="overviewStats">
+      <div class="stat-card gold">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-value" id="statHabits">0/0</div>
+        <div class="stat-label" data-ar="عادات اليوم" data-en="Today's Habits">عادات اليوم</div>
+      </div>
+      <div class="stat-card emerald">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-value" id="statGoals">0</div>
+        <div class="stat-label" data-ar="أهداف نشطة" data-en="Active Goals">أهداف نشطة</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-value" id="statPomo">0</div>
+        <div class="stat-label" data-ar="جلسات تركيز" data-en="Focus Sessions">جلسات تركيز</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-value" id="statXP">0</div>
+        <div class="stat-label" data-ar="نقاط الخبرة" data-en="Total XP">نقاط الخبرة</div>
+      </div>
+      <div class="stat-card rose">
+        <div class="stat-icon">📝</div>
+        <div class="stat-value" id="statJournal">0</div>
+        <div class="stat-label" data-ar="يوميات" data-en="Journal Entries">يوميات</div>
+      </div>
+      <div class="stat-card cyan">
+        <div class="stat-icon">🤲</div>
+        <div class="stat-value" id="statAzkar">0</div>
+        <div class="stat-label" data-ar="أذكار اليوم" data-en="Today's Azkar">أذكار اليوم</div>
+      </div>
+    </div>
+
+```
+<div class="grid-2" style="margin-top:16px">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🔥 <span data-ar="عادات اليوم" data-en="Today's Habits">عادات اليوم</span></div>
+    </div>
+    <div id="overviewHabits"><div class="empty-state"><div class="empty-icon">🔥</div>أضف عادات من تبويب العادات</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🎯 <span data-ar="تقدم الأهداف" data-en="Goals Progress">تقدم الأهداف</span></div>
+    </div>
+    <div id="overviewGoals"><div class="empty-state"><div class="empty-icon">🎯</div>أضف أهداف من تبويب الأهداف</div></div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ============ HABITS ============ -->
+
+  <div class="tab-content" id="tab-habits">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🔥 <span data-ar="عاداتي اليومية" data-en="Daily Habits">عاداتي اليومية</span></div>
+        <div class="card-badge" style="background:rgba(245,158,11,0.15);color:var(--accent-gold)" id="habitScore">0%</div>
+      </div>
+      <div id="habitsList"></div>
+      <div class="input-row">
+        <input class="text-input" id="habitInput" placeholder="أضف عادة جديدة... / Add new habit..." onkeypress="if(event.key==='Enter')addHabit()">
+        <button class="btn btn-gold" onclick="addHabit()">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ GOALS ============ -->
+
+  <div class="tab-content" id="tab-goals">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🎯 <span data-ar="أهدافي" data-en="My Goals">أهدافي</span></div>
+      </div>
+      <div id="goalsList"></div>
+      <div class="input-row">
+        <input class="text-input" id="goalInput" placeholder="أضف هدف جديد... / Add new goal..." onkeypress="if(event.key==='Enter')addGoal()">
+        <button class="btn btn-gold" onclick="addGoal()">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SKILLS ============ -->
+
+  <div class="tab-content" id="tab-skills">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚡ <span data-ar="شجرة المهارات" data-en="Skill Tree">شجرة المهارات</span></div>
+      </div>
+      <div id="skillsList"></div>
+      <div class="input-row">
+        <input class="text-input" id="skillInput" placeholder="أضف مهارة... / Add skill..." onkeypress="if(event.key==='Enter')addSkill()">
+        <button class="btn btn-gold" onclick="addSkill()">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FINANCE ============ -->
+
+  <div class="tab-content" id="tab-finance">
+    <div class="card">
+      <div class="finance-total">
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px" data-ar="الرصيد" data-en="Balance">الرصيد</div>
+        <div class="finance-amount" id="financeBalance">$0.00</div>
+      </div>
+      <div id="financeList"></div>
+      <div class="input-row" style="margin-top:12px">
+        <input class="text-input" id="financeDesc" placeholder="الوصف / Description" style="flex:2">
+        <input class="text-input" id="financeAmount" type="number" placeholder="المبلغ / Amount" style="flex:1;direction:ltr">
+        <button class="btn btn-gold btn-sm" onclick="addFinance('income')" style="background:rgba(16,185,129,0.2);color:var(--accent-emerald)">+</button>
+        <button class="btn btn-sm btn-danger" onclick="addFinance('expense')">−</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ POMODORO ============ -->
+
+  <div class="tab-content" id="tab-pomodoro">
+    <div class="card">
+      <div class="pomodoro-display">
+        <div class="pomodoro-time" id="pomoTime">25:00</div>
+        <div class="pomodoro-label" id="pomoLabel" data-ar="وقت التركيز" data-en="Focus Time">وقت التركيز</div>
+        <div class="pomodoro-controls">
+          <button class="btn btn-gold" id="pomoStartBtn" onclick="togglePomo()">
+            <span data-ar="ابدأ" data-en="Start">ابدأ</span>
+          </button>
+          <button class="btn btn-ghost" onclick="resetPomo()">
+            <span data-ar="إعادة" data-en="Reset">إعادة</span>
+          </button>
+        </div>
+        <div class="pomodoro-stats">
+          <div class="pomo-stat">
+            <div class="pomo-stat-val" id="pomoSessions">0</div>
+            <div class="pomo-stat-lbl" data-ar="جلسات" data-en="Sessions">جلسات</div>
+          </div>
+          <div class="pomo-stat">
+            <div class="pomo-stat-val" id="pomoTotalMin">0</div>
+            <div class="pomo-stat-lbl" data-ar="دقائق تركيز" data-en="Focus Mins">دقائق تركيز</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ JOURNAL ============ -->
+
+  <div class="tab-content" id="tab-journal">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📝 <span data-ar="يومياتي" data-en="My Journal">يومياتي</span></div>
+      </div>
+      <div style="margin-bottom:12px">
+        <textarea class="text-input" id="journalInput" placeholder="اكتب أفكارك... ما الذي حدث اليوم؟ / Write your thoughts..."></textarea>
+        <div class="input-row" style="margin-top:8px">
+          <select class="text-input" id="journalMood" style="flex:0 0 auto;width:auto">
+            <option value="😊">😊 سعيد</option>
+            <option value="😐">😐 عادي</option>
+            <option value="😔">😔 حزين</option>
+            <option value="🔥">🔥 متحمس</option>
+            <option value="😤">😤 محبط</option>
+            <option value="🤲">🤲 شاكر</option>
+          </select>
+          <button class="btn btn-gold" onclick="addJournal()"><span data-ar="حفظ" data-en="Save">حفظ</span></button>
+        </div>
+      </div>
+      <div id="journalList"></div>
+    </div>
+  </div>
+
+  <!-- ============ AZKAR ============ -->
+
+  <div class="tab-content" id="tab-azkar">
+    <div id="azkarList"></div>
+  </div>
+
+  <!-- ============ NOTES ============ -->
+
+  <div class="tab-content" id="tab-notes">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📌 <span data-ar="ملاحظاتي" data-en="My Notes">ملاحظاتي</span></div>
+      </div>
+      <div style="margin-bottom:12px">
+        <input class="text-input" id="noteTitle" placeholder="العنوان / Title" style="margin-bottom:8px">
+        <textarea class="text-input" id="noteBody" placeholder="الملاحظة... / Note content..."></textarea>
+        <div class="input-row" style="margin-top:8px">
+          <button class="btn btn-gold" onclick="addNote()"><span data-ar="حفظ" data-en="Save">حفظ</span></button>
+        </div>
+      </div>
+      <div id="notesList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== STATE ====================
+let state = {
+  lang: 'ar',
+  xp: 0,
+  habits: [],
+  goals: [],
+  skills: [],
+  finance: [],
+  journal: [],
+  notes: [],
+  pomoSessions: 0,
+  pomoTotalMin: 0,
+  azkarCounts: {},
+  motivationIdx: 0
+};
+
+// Load from localStorage
+function loadState() {
+  try {
+    const saved = localStorage.getItem('bader-life-os');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state = { ...state, ...parsed };
+      // Reset habits completion if new day
+      const today = new Date().toDateString();
+      if (parsed.lastHabitDate !== today) {
+        state.habits.forEach(h => h.completed = false);
+        state.azkarCounts = {};
+        state.lastHabitDate = today;
+      }
+    }
+  } catch(e) {}
+}
+
+function saveState() {
+  state.lastHabitDate = new Date().toDateString();
+  try { localStorage.setItem('bader-life-os', JSON.stringify(state)); } catch(e) {}
+}
+
+// ==================== MOTIVATION ====================
+const motivations = [
+  { ar: 'بسم الله... يومك الجديد فرصة جديدة 🌟', en: 'Bismillah... A new day, a new opportunity 🌟' },
+  { ar: 'الصبر مفتاح الفرج... أنت أقرب مما تظن 💪', en: 'Patience is the key... You\'re closer than you think 💪' },
+  { ar: '"وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا" — الطلاق:2', en: '"Whoever fears Allah, He will make a way out for them" — 65:2' },
+  { ar: 'كل سطر كود تكتبه يقربك من حلمك 🚀', en: 'Every line of code brings you closer to your dream 🚀' },
+  { ar: 'من ليبيا للعالمية... هذا طريقك يا بدر 🇱🇾', en: 'From Libya to the world... This is your path, Bader 🇱🇾' },
+  { ar: 'الحلال مبارك... استمر على طريق الخير ✨', en: 'Halal earnings are blessed... Keep on the right path ✨' },
+  { ar: '"إِنَّ مَعَ الْعُسْرِ يُسْرًا" — الشرح:6', en: '"With hardship comes ease" — 94:6' },
+  { ar: 'اليوم أفضل من أمس... وغداً أفضل بإذن الله', en: 'Today is better than yesterday... Tomorrow even better, Insha\'Allah' },
+  { ar: 'تعلمك ومثابرتك سلاحك... لا تتوقف 🔥', en: 'Your learning and persistence are your weapons... Don\'t stop 🔥' },
+  { ar: 'ربك يراك وأنت تحارب... الأجر محفوظ 🤲', en: 'Allah sees your struggle... The reward is preserved 🤲' },
+];
+
+function nextMotivation() {
+  state.motivationIdx = (state.motivationIdx + 1) % motivations.length;
+  const m = motivations[state.motivationIdx];
+  document.getElementById('motivationText').textContent = state.lang === 'ar' ? m.ar : m.en;
+}
+
+// ==================== CLOCK ====================
+function updateClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  const date = now.toLocaleDateString(state.lang === 'ar' ? 'ar-LY' : 'en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('clockDisplay').innerHTML = `<div style="font-size:16px;font-weight:600">${time}</div><div style="font-size:11px">${date}</div>`;
+}
+
+// ==================== LANGUAGE ====================
+function toggleLang() {
+  state.lang = state.lang === 'ar' ? 'en' : 'ar';
+  document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-ar]').forEach(el => {
+    el.textContent = state.lang === 'ar' ? el.dataset.ar : el.dataset.en;
+  });
+  document.getElementById('headerTitle').textContent = state.lang === 'ar' ? 'لوحة حياة بدر' : "Bader's Life OS";
+  const m = motivations[state.motivationIdx];
+  document.getElementById('motivationText').textContent = state.lang === 'ar' ? m.ar : m.en;
+  saveState();
+  renderAll();
+}
+
+// ==================== TABS ====================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ==================== XP SYSTEM ====================
+function addXP(amount) {
+  state.xp += amount;
+  saveState();
+  updateXP();
+}
+
+function updateXP() {
+  const level = Math.floor(state.xp / 100) + 1;
+  const xpInLevel = state.xp % 100;
+  const levelNames = {
+    ar: ['مبتدئ طموح','متعلم نشط','مطور واعد','محارب رقمي','نجم صاعد','محترف','خبير','أسطورة','قائد','ملهم العالم'],
+    en: ['Ambitious Beginner','Active Learner','Promising Dev','Digital Warrior','Rising Star','Professional','Expert','Legend','Leader','World Inspirer']
+  };
+  const idx = Math.min(level - 1, levelNames.ar.length - 1);
+  const name = state.lang === 'ar' ? levelNames.ar[idx] : levelNames.en[idx];
+  document.getElementById('xpLevel').textContent = `⭐ Level ${level} — ${name}`;
+  document.getElementById('xpNumbers').textContent = `${xpInLevel} / 100 XP`;
+  document.getElementById('xpFill').style.width = xpInLevel + '%';
+  document.getElementById('statXP').textContent = state.xp;
+}
+
+// ==================== HABITS ====================
+function addHabit() {
+  const input = document.getElementById('habitInput');
+  const name = input.value.trim();
+  if (!name) return;
+  state.habits.push({ id: Date.now(), name, completed: false, streak: 0 });
+  input.value = '';
+  saveState(); renderHabits(); updateOverview();
+}
+
+function toggleHabit(id) {
+  const h = state.habits.find(x => x.id === id);
+  if (!h) return;
+  h.completed = !h.completed;
+  if (h.completed) { h.streak++; addXP(10); } else { h.streak = Math.max(0, h.streak - 1); }
+  saveState(); renderHabits(); updateOverview();
+}
+
+function deleteHabit(id) {
+  state.habits = state.habits.filter(x => x.id !== id);
+  saveState(); renderHabits(); updateOverview();
+}
+
+function renderHabits() {
+  const el = document.getElementById('habitsList');
+  if (!state.habits.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🔥</div>${state.lang==='ar'?'أضف عادتك الأولى':'Add your first habit'}</div>`;
+    document.getElementById('habitScore').textContent = '0%';
+    return;
+  }
+  el.innerHTML = state.habits.map(h => `
+    <div class="habit-item ${h.completed?'completed':''}" onclick="toggleHabit(${h.id})">
+      <div class="habit-check">${h.completed?'✓':''}</div>
+      <div class="habit-name">${h.name}</div>
+      <div class="habit-streak">🔥 ${h.streak}</div>
+      <button class="delete-btn" onclick="event.stopPropagation();deleteHabit(${h.id})">×</button>
+    </div>
+  `).join('');
+  const done = state.habits.filter(h=>h.completed).length;
+  const pct = Math.round((done/state.habits.length)*100);
+  document.getElementById('habitScore').textContent = pct + '%';
+}
+
+// ==================== GOALS ====================
+function addGoal() {
+  const input = document.getElementById('goalInput');
+  const name = input.value.trim();
+  if (!name) return;
+  state.goals.push({ id: Date.now(), name, progress: 0 });
+  input.value = '';
+  saveState(); renderGoals(); updateOverview();
+}
+
+function updateGoalProgress(id, delta) {
+  const g = state.goals.find(x => x.id === id);
+  if (!g) return;
+  g.progress = Math.max(0, Math.min(100, g.progress + delta));
+  if (g.progress === 100) addXP(50);
+  saveState(); renderGoals(); updateOverview();
+}
+
+function deleteGoal(id) {
+  state.goals = state.goals.filter(x => x.id !== id);
+  saveState(); renderGoals(); updateOverview();
+}
+
+function renderGoals() {
+  const el = document.getElementById('goalsList');
+  if (!state.goals.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🎯</div>${state.lang==='ar'?'أضف هدفك الأول':'Add your first goal'}</div>`;
+    return;
+  }
+  el.innerHTML = state.goals.map(g => `
+    <div class="goal-item">
+      <div class="goal-top">
+        <div class="goal-name">${g.name}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="goal-percent">${g.progress}%</div>
+          <button class="delete-btn" onclick="deleteGoal(${g.id})">×</button>
+        </div>
+      </div>
+      <div class="goal-bar"><div class="goal-fill" style="width:${g.progress}%"></div></div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <button class="btn btn-ghost btn-sm" onclick="updateGoalProgress(${g.id},-10)">-10%</button>
+        <button class="btn btn-ghost btn-sm" onclick="updateGoalProgress(${g.id},10)">+10%</button>
+        <button class="btn btn-ghost btn-sm" onclick="updateGoalProgress(${g.id},25)">+25%</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ==================== SKILLS ====================
+const skillColors = ['var(--accent-gold)','var(--accent-emerald)','var(--accent-blue)','var(--accent-purple)','var(--accent-cyan)','var(--accent-rose)'];
+
+function addSkill() {
+  const input = document.getElementById('skillInput');
+  const name = input.value.trim();
+  if (!name) return;
+  state.skills.push({ id: Date.now(), name, xp: 0 });
+  input.value = '';
+  saveState(); renderSkills();
+}
+
+function addSkillXP(id, amount) {
+  const s = state.skills.find(x => x.id === id);
+  if (!s) return;
+  s.xp += amount;
+  addXP(amount);
+  saveState(); renderSkills();
+}
+
+function deleteSkill(id) {
+  state.skills = state.skills.filter(x => x.id !== id);
+  saveState(); renderSkills();
+}
+
+function renderSkills() {
+  const el = document.getElementById('skillsList');
+  if (!state.skills.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">⚡</div>${state.lang==='ar'?'أضف مهارتك الأولى':'Add your first skill'}</div>`;
+    return;
+  }
+  el.innerHTML = state.skills.map((s, i) => {
+    const level = Math.floor(s.xp / 50) + 1;
+    const xpInLvl = s.xp % 50;
+    const color = skillColors[i % skillColors.length];
+    return `
+    <div class="skill-item">
+      <div class="skill-level" style="background:${color}22;color:${color}">${level}</div>
+      <div class="skill-info">
+        <div class="skill-name">${s.name}</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill" style="width:${(xpInLvl/50)*100}%;background:${color}"></div></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="addSkillXP(${s.id},10)">+10 XP</button>
+      <button class="delete-btn" onclick="deleteSkill(${s.id})">×</button>
+    </div>`;
+  }).join('');
+}
+
+// ==================== FINANCE ====================
+function addFinance(type) {
+  const desc = document.getElementById('financeDesc').value.trim();
+  const amount = parseFloat(document.getElementById('financeAmount').value);
+  if (!desc || isNaN(amount) || amount <= 0) return;
+  state.finance.push({ id: Date.now(), desc, amount: type==='income'?amount:-amount, type, date: new Date().toLocaleDateString() });
+  document.getElementById('financeDesc').value = '';
+  document.getElementById('financeAmount').value = '';
+  saveState(); renderFinance();
+}
+
+function deleteFinance(id) {
+  state.finance = state.finance.filter(x => x.id !== id);
+  saveState(); renderFinance();
+}
+
+function renderFinance() {
+  const balance = state.finance.reduce((sum, f) => sum + f.amount, 0);
+  document.getElementById('financeBalance').textContent = `$${balance.toFixed(2)}`;
+  document.getElementById('financeBalance').style.color = balance >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)';
+  const el = document.getElementById('financeList');
+  if (!state.finance.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">💰</div>${state.lang==='ar'?'سجل أول معاملة':'Add first transaction'}</div>`;
+    return;
+  }
+  el.innerHTML = [...state.finance].reverse().slice(0, 20).map(f => `
+    <div class="finance-item">
+      <div class="finance-item-name">${f.desc} <span style="font-size:11px;color:var(--text-muted)">${f.date}</span></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="finance-item-amount ${f.type}">${f.amount > 0 ? '+' : ''}${f.amount.toFixed(2)}</div>
+        <button class="delete-btn" onclick="deleteFinance(${f.id})">×</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ==================== POMODORO ====================
+let pomoInterval = null;
+let pomoSeconds = 25 * 60;
+let pomoRunning = false;
+
+function togglePomo() {
+  if (pomoRunning) {
+    clearInterval(pomoInterval);
+    pomoRunning = false;
+    document.querySelector('#pomoStartBtn span').textContent = state.lang === 'ar' ? 'استمر' : 'Resume';
+  } else {
+    pomoRunning = true;
+    document.querySelector('#pomoStartBtn span').textContent = state.lang === 'ar' ? 'إيقاف' : 'Pause';
+    pomoInterval = setInterval(() => {
+      pomoSeconds--;
+      if (pomoSeconds <= 0) {
+        clearInterval(pomoInterval);
+        pomoRunning = false;
+        state.pomoSessions++;
+        state.pomoTotalMin += 25;
+        addXP(25);
+        pomoSeconds = 25 * 60;
+        document.querySelector('#pomoStartBtn span').textContent = state.lang === 'ar' ? 'ابدأ' : 'Start';
+        saveState();
+        updateOverview();
+        try { new Audio('data:audio/wav;base64,UklGRl9vT19teledata').play(); } catch(e){}
+        alert(state.lang === 'ar' ? '🎉 أحسنت! أكملت جلسة تركيز' : '🎉 Great job! Focus session complete');
+      }
+      renderPomoTime();
+    }, 1000);
+  }
+}
+
+function resetPomo() {
+  clearInterval(pomoInterval);
+  pomoRunning = false;
+  pomoSeconds = 25 * 60;
+  document.querySelector('#pomoStartBtn span').textContent = state.lang === 'ar' ? 'ابدأ' : 'Start';
+  renderPomoTime();
+}
+
+function renderPomoTime() {
+  const m = Math.floor(pomoSeconds / 60).toString().padStart(2, '0');
+  const s = (pomoSeconds % 60).toString().padStart(2, '0');
+  document.getElementById('pomoTime').textContent = `${m}:${s}`;
+  document.getElementById('pomoSessions').textContent = state.pomoSessions;
+  document.getElementById('pomoTotalMin').textContent = state.pomoTotalMin;
+}
+
+// ==================== JOURNAL ====================
+function addJournal() {
+  const text = document.getElementById('journalInput').value.trim();
+  if (!text) return;
+  const mood = document.getElementById('journalMood').value;
+  state.journal.unshift({
+    id: Date.now(), text, mood,
+    date: new Date().toLocaleString(state.lang === 'ar' ? 'ar-LY' : 'en-US')
+  });
+  document.getElementById('journalInput').value = '';
+  addXP(5);
+  saveState(); renderJournal(); updateOverview();
+}
+
+function deleteJournal(id) {
+  state.journal = state.journal.filter(x => x.id !== id);
+  saveState(); renderJournal(); updateOverview();
+}
+
+function renderJournal() {
+  const el = document.getElementById('journalList');
+  if (!state.journal.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📝</div>${state.lang==='ar'?'اكتب أول يومية':'Write your first entry'}</div>`;
+    return;
+  }
+  el.innerHTML = state.journal.map(j => `
+    <div class="journal-entry">
+      <div class="journal-date">${j.mood} ${j.date} <button class="delete-btn" style="display:inline;vertical-align:middle" onclick="deleteJournal(${j.id})">×</button></div>
+      <div class="journal-text">${j.text}</div>
+    </div>
+  `).join('');
+}
+
+// ==================== AZKAR ====================
+const azkarData = [
+  { ar: 'سبحان الله', en: 'SubhanAllah', target: 33 },
+  { ar: 'الحمد لله', en: 'Alhamdulillah', target: 33 },
+  { ar: 'الله أكبر', en: 'Allahu Akbar', target: 34 },
+  { ar: 'لا إله إلا الله', en: 'La ilaha illa Allah', target: 100 },
+  { ar: 'أستغفر الله', en: 'Astaghfirullah', target: 100 },
+  { ar: 'لا حول ولا قوة إلا بالله', en: 'La hawla wala quwwata illa billah', target: 33 },
+];
+
+function countAzkar(idx) {
+  const key = 'azkar_' + idx;
+  state.azkarCounts[key] = (state.azkarCounts[key] || 0) + 1;
+  if (state.azkarCounts[key] === azkarData[idx].target) addXP(5);
+  saveState(); renderAzkar(); updateOverview();
+}
+
+function resetAzkar(idx) {
+  state.azkarCounts['azkar_' + idx] = 0;
+  saveState(); renderAzkar(); updateOverview();
+}
+
+function renderAzkar() {
+  const el = document.getElementById('azkarList');
+  el.innerHTML = azkarData.map((a, i) => {
+    const count = state.azkarCounts['azkar_' + i] || 0;
+    const done = count >= a.target;
+    return `
+    <div class="dua-card" style="${done?'border-color:rgba(16,185,129,0.3);background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.03))':''}">
+      <div class="dua-text">${state.lang==='ar'?a.ar:a.en}</div>
+      <div class="dua-counter">
+        <button class="counter-btn" onclick="resetAzkar(${i})">↺</button>
+        <div class="counter-val">${count} / ${a.target}</div>
+        <button class="counter-btn" onclick="countAzkar(${i})" style="font-size:24px;${done?'background:rgba(16,185,129,0.2);color:var(--accent-emerald)':''}">+</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ==================== NOTES ====================
+function addNote() {
+  const title = document.getElementById('noteTitle').value.trim();
+  const body = document.getElementById('noteBody').value.trim();
+  if (!body) return;
+  state.notes.unshift({
+    id: Date.now(), title: title || (state.lang==='ar'?'ملاحظة':'Note'),
+    body, date: new Date().toLocaleString(state.lang==='ar'?'ar-LY':'en-US')
+  });
+  document.getElementById('noteTitle').value = '';
+  document.getElementById('noteBody').value = '';
+  addXP(3);
+  saveState(); renderNotes();
+}
+
+function deleteNote(id) {
+  state.notes = state.notes.filter(x => x.id !== id);
+  saveState(); renderNotes();
+}
+
+function renderNotes() {
+  const el = document.getElementById('notesList');
+  if (!state.notes.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📌</div>${state.lang==='ar'?'أضف أول ملاحظة':'Add your first note'}</div>`;
+    return;
+  }
+  el.innerHTML = state.notes.map(n => `
+    <div class="note-card">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div class="note-title">${n.title}</div>
+        <button class="delete-btn" onclick="deleteNote(${n.id})">×</button>
+      </div>
+      <div class="note-body">${n.body}</div>
+      <div class="note-meta">${n.date}</div>
+    </div>
+  `).join('');
+}
+
+// ==================== OVERVIEW ====================
+function updateOverview() {
+  const habitsDone = state.habits.filter(h=>h.completed).length;
+  document.getElementById('statHabits').textContent = `${habitsDone}/${state.habits.length}`;
+  document.getElementById('statGoals').textContent = state.goals.length;
+  document.getElementById('statPomo').textContent = state.pomoSessions;
+  document.getElementById('statJournal').textContent = state.journal.length;
+  const totalAzkar = Object.values(state.azkarCounts).reduce((s,v)=>s+v, 0);
+  document.getElementById('statAzkar').textContent = totalAzkar;
+
+  // Overview habits preview
+  const ohEl = document.getElementById('overviewHabits');
+  if (state.habits.length) {
+    ohEl.innerHTML = state.habits.slice(0,5).map(h => `
+      <div class="habit-item ${h.completed?'completed':''}" onclick="toggleHabit(${h.id})" style="margin-bottom:6px">
+        <div class="habit-check">${h.completed?'✓':''}</div>
+        <div class="habit-name">${h.name}</div>
+      </div>
+    `).join('');
+  }
+
+  // Overview goals preview
+  const ogEl = document.getElementById('overviewGoals');
+  if (state.goals.length) {
+    ogEl.innerHTML = state.goals.slice(0,4).map(g => `
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:13px">${g.name}</span>
+          <span style="font-family:'JetBrains Mono';font-size:12px;color:var(--accent-gold)">${g.progress}%</span>
+        </div>
+        <div class="goal-bar"><div class="goal-fill" style="width:${g.progress}%"></div></div>
+      </div>
+    `).join('');
+  }
+}
+
+// ==================== STARS ====================
+function createStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+    star.style.animationDelay = Math.random() * 3 + 's';
+    if (Math.random() > 0.7) { star.style.width = '3px'; star.style.height = '3px'; }
+    container.appendChild(star);
+  }
+}
+
+// ==================== INIT ====================
+function renderAll() {
+  renderHabits(); renderGoals(); renderSkills();
+  renderFinance(); renderPomoTime(); renderJournal();
+  renderAzkar(); renderNotes(); updateXP(); updateOverview();
+}
+
+loadState();
+createStars();
+renderAll();
+updateClock();
+setInterval(updateClock, 1000);
+
+// Welcome message on first visit
+if (!localStorage.getItem('bader-life-os-welcomed')) {
+  localStorage.setItem('bader-life-os-welcomed', 'true');
+  setTimeout(() => {
+    alert('🌟 أهلاً بدر! مرحباً في لوحة حياتك\nWelcome to your Life OS!\n\nهنا تقدر تتابع عاداتك، أهدافك، مهاراتك، مصاريفك، أذكارك وأكثر.\nEverything you need to level up your life!');
+  }, 500);
+}
+</script>
+
+</body>
+</html>
